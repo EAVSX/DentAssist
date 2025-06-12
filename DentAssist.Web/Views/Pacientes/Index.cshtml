@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DentAssist.Web.Models.PacienteViewModel>
+
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Pacientes</h2>
+    <a class="btn btn-primary" asp-action="Create">Crear Nuevo Paciente</a>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Fecha Nac.</th>
+            <th>Teléfono</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var paciente in Model)
+        {
+            <tr>
+                <td>@paciente.Id</td>
+                <td>@paciente.Nombre</td>
+                <td>@paciente.Apellido</td>
+                <td>@paciente.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                <td>@paciente.Telefono</td>
+                <td class="text-center">
+                    <a class="btn btn-sm btn-secondary me-1" asp-action="Edit" asp-route-id="@paciente.Id">Editar</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@paciente.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

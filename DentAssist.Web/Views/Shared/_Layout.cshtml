@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - DentAssist</title>
+
+    <!-- CSS de Bootstrap instalado vía LibMan -->
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+
+    <!-- Tu CSS personalizado -->
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <!-- NAVBAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="@Url.Action("Index", "Home")">DentAssist</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                        aria-expanded="false" aria-label="Mostrar menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Pacientes")">Pacientes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Turnos")">Turnos</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container my-4">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-top py-3 text-center">
+        <div class="container">
+            &copy; @DateTime.Now.Year - DentAssist
+        </div>
+    </footer>
+
+    <!-- Scripts: jQuery y Bootstrap JS instalados vía LibMan -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Validación de DataAnnotations en cliente -->
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\bootstrap\**" />
+    <Compile Remove="wwwroot\jquery\**" />
+    <Content Remove="wwwroot\bootstrap\**" />
+    <Content Remove="wwwroot\jquery\**" />
+    <EmbeddedResource Remove="wwwroot\bootstrap\**" />
+    <EmbeddedResource Remove="wwwroot\jquery\**" />
+    <None Remove="wwwroot\bootstrap\**" />
+    <None Remove="wwwroot\jquery\**" />
+  </ItemGroup>
+
+</Project>
