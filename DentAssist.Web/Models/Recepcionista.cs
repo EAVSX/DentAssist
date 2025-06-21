@@ -2,6 +2,9 @@
 
 namespace DentAssist.Models
 {
+    // Modelo para representar a los recepcionistas registrados en la clínica.
+    // Incluye los campos esenciales para la gestión y autenticación: nombre, email y contraseña.
+    // Se aplican validaciones clásicas para asegurar datos completos y en formato correcto.
     public class Recepcionista
     {
         [Key]

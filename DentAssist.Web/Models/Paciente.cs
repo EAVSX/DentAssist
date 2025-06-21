@@ -5,6 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DentAssist.Web.Models
 {
+    // Modelo que representa a los pacientes de la clínica.
+    // Incluye los datos principales de identificación y contacto, además de la relación con el odontólogo responsable.
+    // Dispone de una propiedad calculada (NombreCompleto) para uso en vistas y listados.
+    // Establece relaciones clásicas: un paciente tiene muchos turnos y varios planes de tratamiento.
     public class Paciente
     {
         [Key]
@@ -38,14 +42,14 @@ namespace DentAssist.Web.Models
         [StringLength(200)]
         public string Direccion { get; set; }
 
-        // FK al odontólogo
+        // Clave foránea: odontólogo responsable del paciente
         [Required]
         public int OdontologoId { get; set; }
 
         [ForeignKey("OdontologoId")]
         public Odontologo Odontologo { get; set; }
 
-        // Relaciones
+        // Relaciones: turnos y planes de tratamiento del paciente
         public ICollection<Turno> Turnos { get; set; }
         public ICollection<PlanTratamiento> Planes { get; set; }
     }

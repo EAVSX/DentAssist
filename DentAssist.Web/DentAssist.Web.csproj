@@ -1,12 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<!-- Indica que este proyecto utiliza el SDK para aplicaciones web de .NET (ASP.NET Core) -->
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
+		<!-- Define que el proyecto compila para .NET 8 -->
+
 		<Nullable>enable</Nullable>
+		<!-- Habilita la comprobación de valores nulos para mejorar la seguridad de tipos (recomendado en proyectos nuevos, pero recuerda que en código clásico muchas veces esto se ignora) -->
+
 		<ImplicitUsings>enable</ImplicitUsings>
+		<!-- Incluye automáticamente los using más comunes para ASP.NET Core, para no agregarlos manualmente en cada archivo -->
 	</PropertyGroup>
 
 	<ItemGroup>
+		<!-- Estos bloques remueven del proyecto ciertos archivos y carpetas específicas que no quieres compilar ni incluir como contenido.
+		     Por ejemplo: librerías de PDF, Bootstrap y jQuery de la carpeta wwwroot, probablemente para evitar redundancia o conflictos. -->
 		<Compile Remove="PdfLibreria\**" />
 		<Compile Remove="wwwroot\bootstrap\**" />
 		<Compile Remove="wwwroot\jquery\**" />
@@ -22,11 +30,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- EF Core runtime 9 -->
+		<!-- Referencias a paquetes NuGet que el proyecto necesita. Los más importantes aquí: -->
+
+		<!-- DinkToPdf: Permite generar PDFs desde HTML usando wkhtmltopdf -->
 		<PackageReference Include="DinkToPdf" Version="1.0.8" />
+
+		<!-- Entity Framework Core (EF Core) y su proveedor para trabajar con bases de datos en memoria o persistentes -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
-		<!-- EF Core tools & design -->
+
+		<!-- Herramientas de diseño y de consola para EF Core (sólo para desarrollo, no necesarias en producción) -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.6">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -34,25 +47,26 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 
-		<!-- Pomelo preview para EF Core 9 + MariaDB/MySQL -->
+		<!-- Pomelo: Proveedor de EF Core para trabajar con bases de datos MySQL/MariaDB. 
+		     Se indica versión preview porque la versión estable para EF Core 9 puede no estar disponible aún -->
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
-		
 
-		<!-- Identity EF Core para .NET 8 (version 8.x) -->
+		<!-- ASP.NET Identity con integración a EF Core, para manejo de usuarios y roles -->
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-		
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="runtimes\win-x64\native\libwkhtmltox.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="runtimes\win-x64\native\libwkhtmltox.dylib">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="runtimes\win-x64\native\libwkhtmltox.so">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<!-- Estos bloques aseguran que las librerías nativas necesarias para convertir HTML a PDF
+		     (libwkhtmltox en distintas plataformas) se copien siempre a la carpeta de salida del proyecto.
+		     Esto es imprescindible para que funcione DinkToPdf en producción. -->
+		<None Update="runtimes\win-x64\native\libwkhtmltox.dll">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="runtimes\win-x64\native\libwkhtmltox.dylib">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="runtimes\win-x64\native\libwkhtmltox.so">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
-
 </Project>

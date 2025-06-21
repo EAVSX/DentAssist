@@ -9,13 +9,16 @@ using DentAssist.Web.Models;
 
 namespace DentAssist.Web.Controllers
 {
+    // Controlador solo accesible por administradores, gestiona CRUD de odontólogos y usuarios asociados
     [Authorize(Roles = "Administrador")]
     public class OdontologoController : Controller
     {
+        // Dependencias para acceso a base de datos, usuarios y roles
         private readonly DentAssistContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        // Inyección de dependencias vía constructor
         public OdontologoController(
             DentAssistContext context,
             UserManager<IdentityUser> userManager,
@@ -26,10 +29,10 @@ namespace DentAssist.Web.Controllers
             _roleManager = roleManager;
         }
 
-        // --------------------------------------------------
-        // LISTAR ODONTÓLOGOS
-        // GET: /Odontologo
-        // --------------------------------------------------
+        // ========================================================
+        // LISTADO GENERAL DE ODONTÓLOGOS
+        // ========================================================
+        // Muestra todos los odontólogos registrados en el sistema
         public IActionResult Index()
         {
             List<Odontologo> lista = new List<Odontologo>();
@@ -40,23 +43,23 @@ namespace DentAssist.Web.Controllers
             return View(lista);
         }
 
-        // --------------------------------------------------
-        // CREAR ODONTÓLOGO
-        // GET: /Odontologo/Create
-        // --------------------------------------------------
+        // ========================================================
+        // CREAR NUEVO ODONTÓLOGO (GET Y POST)
+        // ========================================================
+        // Formulario de registro para nuevo odontólogo
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Odontologo/Create
+        // Procesa el alta de un odontólogo y su usuario Identity
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OdontologoViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            // 1) Guardar el Odontólogo en EF
+            // Guarda odontólogo en la base relacional
             Odontologo odo = new Odontologo
             {
                 Nombre = model.Nombre,
@@ -70,7 +73,7 @@ namespace DentAssist.Web.Controllers
             _context.Odontologo.Add(odo);
             _context.SaveChanges();
 
-            // 2) Crear el usuario en Identity
+            // Crea el usuario en Identity con el mismo email y contraseña
             IdentityUser user = new IdentityUser
             {
                 UserName = model.Email,
@@ -79,32 +82,28 @@ namespace DentAssist.Web.Controllers
             IdentityResult creacion = await _userManager.CreateAsync(user, model.Password);
             if (!creacion.Succeeded)
             {
-                // Si falla el IdentityUser, mostrar errores y eliminar el Odontólogo
+                // Si falla la creación del usuario, elimina el odontólogo (rollback manual)
                 foreach (var err in creacion.Errors)
                     ModelState.AddModelError("", err.Description);
 
-                // Rollback manual
-                _context.Odontologo    .Remove(odo);
+                _context.Odontologo.Remove(odo);
                 _context.SaveChanges();
-
                 return View(model);
             }
 
-            // 3) Asegurarse de que exista el rol "Odontólogo"
+            // Asegura que exista el rol "Odontólogo" y lo asigna al nuevo usuario
             bool existeRol = await _roleManager.RoleExistsAsync("Odontólogo");
             if (!existeRol)
                 await _roleManager.CreateAsync(new IdentityRole("Odontólogo"));
-
-            // 4) Asignar al nuevo usuario el rol
             await _userManager.AddToRoleAsync(user, "Odontólogo");
 
             return RedirectToAction("Index");
         }
 
-        // --------------------------------------------------
-        // EDITAR ODONTÓLOGO
-        // GET: /Odontologo/Edit/5
-        // --------------------------------------------------
+        // ========================================================
+        // EDITAR ODONTÓLOGO (GET Y POST)
+        // ========================================================
+        // Muestra el formulario con los datos actuales del odontólogo
         public IActionResult Edit(int id)
         {
             Odontologo odo = _context.Odontologo.Find(id);
@@ -123,7 +122,7 @@ namespace DentAssist.Web.Controllers
             return View(vm);
         }
 
-        // POST: /Odontologo/Edit/5
+        // Procesa la edición y guarda los cambios
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, OdontologoViewModel model)
         {
@@ -145,10 +144,10 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // --------------------------------------------------
-        // ELIMINAR ODONTÓLOGO
-        // GET: /Odontologo/Delete/5
-        // --------------------------------------------------
+        // ========================================================
+        // ELIMINAR ODONTÓLOGO (GET Y POST)
+        // ========================================================
+        // Muestra confirmación antes de eliminar
         public IActionResult Delete(int id)
         {
             Odontologo odo = _context.Odontologo.Find(id);
@@ -156,11 +155,10 @@ namespace DentAssist.Web.Controllers
             return View(odo);
         }
 
-        // POST: /Odontologo/Delete/5
+        // Confirma y ejecuta la eliminación del odontólogo
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-
             Odontologo odo = _context.Odontologo.Find(id);
             if (odo != null)
             {

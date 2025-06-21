@@ -1,54 +1,84 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using DentAssist.Web.Datos;
 using DentAssist.Web.Models;
-using System.Linq;
+using DentAssist.Models;
+
+// Controlador para gestionar los tratamientos realizados a cada paciente.
+// Permite listar, ver detalle, crear, editar y eliminar tratamientos realizados.
 
 namespace DentAssist.Web.Controllers
 {
     public class TratamientosRealizadosController : Controller
     {
+        // Contexto para acceso a la base de datos
         private readonly DentAssistContext _context;
 
+        // Inyección del contexto por constructor
         public TratamientosRealizadosController(DentAssistContext context)
         {
             _context = context;
         }
 
-        // GET: /TratamientosRealizados?pacienteId=5
+        // ========================================================
+        // LISTADO DE TRATAMIENTOS REALIZADOS POR PACIENTE
+        // ========================================================
         public IActionResult Index(int pacienteId)
         {
+            // Guarda el ID de paciente para usar en la vista
             ViewData["PacienteId"] = pacienteId;
-            var lista = _context.TratamientosRealizados
-                                .Include(tr => tr.Tratamiento)
-                                .Where(tr => tr.PacienteId == pacienteId)
-                                .ToList();
+
+            // Lista todos los tratamientos realizados de ese paciente (con info de tratamiento)
+            List<TratamientoRealizado> lista = new List<TratamientoRealizado>();
+            foreach (TratamientoRealizado tr in _context.TratamientosRealizados)
+            {
+                if (tr.PacienteId == pacienteId)
+                {
+                    // Carga el tratamiento relacionado
+                    tr.Tratamiento = _context.Tratamientos.Find(tr.TratamientoId);
+                    lista.Add(tr);
+                }
+            }
             return View(lista);
         }
 
-        // GET: /TratamientosRealizados/Details/5
+        // ========================================================
+        // DETALLE DE UN TRATAMIENTO REALIZADO
+        // ========================================================
         public IActionResult Details(int id)
         {
-            var modelo = _context.TratamientosRealizados
-                                 .Include(tr => tr.Tratamiento)
-                                 .Include(tr => tr.Paciente)
-                                 .FirstOrDefault(tr => tr.Id == id);
+            // Busca el tratamiento realizado y sus relaciones
+            TratamientoRealizado modelo = null;
+            foreach (TratamientoRealizado tr in _context.TratamientosRealizados)
+            {
+                if (tr.Id == id)
+                {
+                    modelo = tr;
+                    break;
+                }
+            }
             if (modelo == null) return NotFound();
+
+            modelo.Tratamiento = _context.Tratamientos.Find(modelo.TratamientoId);
+            modelo.Paciente = _context.Pacientes.Find(modelo.PacienteId);
             return View(modelo);
         }
 
-        // GET: /TratamientosRealizados/Create?pacienteId=5
+        // ========================================================
+        // CREAR NUEVO TRATAMIENTO REALIZADO (GET y POST)
+        // ========================================================
         public IActionResult Create(int pacienteId)
         {
             ViewData["PacienteId"] = pacienteId;
-            ViewData["TratamientosList"] = new SelectList(
-                _context.Tratamientos.ToList(), "Id", "Nombre"
-            );
+            List<Tratamiento> lista = new List<Tratamiento>();
+            foreach (Tratamiento t in _context.Tratamientos)
+            {
+                lista.Add(t);
+            }
+            ViewData["TratamientosList"] = new SelectList(lista, "Id", "Nombre");
             return View();
         }
 
-        // POST: /TratamientosRealizados/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(TratamientoRealizado modelo)
@@ -56,9 +86,12 @@ namespace DentAssist.Web.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["PacienteId"] = modelo.PacienteId;
-                ViewData["TratamientosList"] = new SelectList(
-                    _context.Tratamientos.ToList(), "Id", "Nombre", modelo.TratamientoId
-                );
+                List<Tratamiento> lista = new List<Tratamiento>();
+                foreach (Tratamiento t in _context.Tratamientos)
+                {
+                    lista.Add(t);
+                }
+                ViewData["TratamientosList"] = new SelectList(lista, "Id", "Nombre", modelo.TratamientoId);
                 return View(modelo);
             }
 
@@ -67,20 +100,24 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index", new { pacienteId = modelo.PacienteId });
         }
 
-        // GET: /TratamientosRealizados/Edit/5
+        // ========================================================
+        // EDITAR UN TRATAMIENTO REALIZADO (GET y POST)
+        // ========================================================
         public IActionResult Edit(int id)
         {
-            var modelo = _context.TratamientosRealizados.Find(id);
+            TratamientoRealizado modelo = _context.TratamientosRealizados.Find(id);
             if (modelo == null) return NotFound();
 
             ViewData["PacienteId"] = modelo.PacienteId;
-            ViewData["TratamientosList"] = new SelectList(
-                _context.Tratamientos.ToList(), "Id", "Nombre", modelo.TratamientoId
-            );
+            List<Tratamiento> lista = new List<Tratamiento>();
+            foreach (Tratamiento t in _context.Tratamientos)
+            {
+                lista.Add(t);
+            }
+            ViewData["TratamientosList"] = new SelectList(lista, "Id", "Nombre", modelo.TratamientoId);
             return View(modelo);
         }
 
-        // POST: /TratamientosRealizados/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, TratamientoRealizado modelo)
@@ -90,15 +127,19 @@ namespace DentAssist.Web.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["PacienteId"] = modelo.PacienteId;
-                ViewData["TratamientosList"] = new SelectList(
-                    _context.Tratamientos.ToList(), "Id", "Nombre", modelo.TratamientoId
-                );
+                List<Tratamiento> lista = new List<Tratamiento>();
+                foreach (Tratamiento t in _context.Tratamientos)
+                {
+                    lista.Add(t);
+                }
+                ViewData["TratamientosList"] = new SelectList(lista, "Id", "Nombre", modelo.TratamientoId);
                 return View(modelo);
             }
 
-            var existente = _context.TratamientosRealizados.Find(id);
+            TratamientoRealizado existente = _context.TratamientosRealizados.Find(id);
             if (existente == null) return NotFound();
 
+            // Actualiza campos principales
             existente.FechaRealizacion = modelo.FechaRealizacion;
             existente.TratamientoId = modelo.TratamientoId;
             existente.Observaciones = modelo.Observaciones;
@@ -107,22 +148,31 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index", new { pacienteId = existente.PacienteId });
         }
 
-        // GET: /TratamientosRealizados/Delete/5
+        // ========================================================
+        // ELIMINAR TRATAMIENTO REALIZADO (GET y POST)
+        // ========================================================
         public IActionResult Delete(int id)
         {
-            var modelo = _context.TratamientosRealizados
-                                 .Include(tr => tr.Tratamiento)
-                                 .FirstOrDefault(tr => tr.Id == id);
+            TratamientoRealizado modelo = null;
+            foreach (TratamientoRealizado tr in _context.TratamientosRealizados)
+            {
+                if (tr.Id == id)
+                {
+                    modelo = tr;
+                    break;
+                }
+            }
             if (modelo == null) return NotFound();
+
+            modelo.Tratamiento = _context.Tratamientos.Find(modelo.TratamientoId);
             return View(modelo);
         }
 
-        // POST: /TratamientosRealizados/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var modelo = _context.TratamientosRealizados.Find(id);
+            TratamientoRealizado modelo = _context.TratamientosRealizados.Find(id);
             if (modelo != null)
             {
                 int pid = modelo.PacienteId;

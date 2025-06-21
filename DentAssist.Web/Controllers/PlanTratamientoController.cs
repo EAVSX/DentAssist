@@ -1,7 +1,6 @@
-﻿// Controllers/PlanTratamientoController.cs
+﻿// Controlador para la gestión de planes de tratamiento: CRUD, gestión de pasos, PDF, y vistas tanto para admin como para odontólogo
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,13 +13,16 @@ using DentAssist.Models;
 
 namespace DentAssist.Web.Controllers
 {
+    // Solo usuarios con rol "Administrador" o "Odontólogo" pueden acceder
     [Authorize(Roles = "Administrador,Odontologo")]
     public class PlanTratamientoController : Controller
     {
+        // Contexto de base de datos, convertidor PDF y helper para renderizar vistas como HTML
         private readonly DentAssistContext _context;
         private readonly IConverter _pdfConverter;
         private readonly RazorViewToString _razorRenderer;
 
+        // Inyección de dependencias por constructor
         public PlanTratamientoController(
             DentAssistContext context,
             IConverter pdfConverter,
@@ -31,77 +33,111 @@ namespace DentAssist.Web.Controllers
             _razorRenderer = razorRenderer;
         }
 
-        // GET: /PlanTratamiento
+        // ========================================================
+        // LISTADO GENERAL DE PLANES DE TRATAMIENTO
+        // ========================================================
         public IActionResult Index()
         {
-            var planes = _context.PlanTratamientos
-                                 .ToList()
-                                 .Select(plan => {
-                                     plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
-                                     plan.Tratamiento = _context.Tratamientos.Find(plan.TratamientoId);
-                                     return plan;
-                                 })
-                                 .ToList();
+            // Carga todos los planes, junto a paciente y tratamiento asociados (uno a uno, clásico)
+            var planes = new List<PlanTratamiento>();
+            foreach (PlanTratamiento plan in _context.PlanTratamientos)
+            {
+                plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
+                plan.Tratamiento = _context.Tratamientos.Find(plan.TratamientoId);
+                planes.Add(plan);
+            }
             return View(planes);
         }
 
-        // GET: /PlanTratamiento/MisPlanes
+        // ========================================================
+        // LISTADO DE PLANES SOLO DEL ODONTÓLOGO AUTENTICADO
+        // ========================================================
         [Authorize(Roles = "Odontologo")]
         public IActionResult MisPlanes()
         {
-            var email = User.Identity.Name;
-            var odon = _context.Odontologo.FirstOrDefault(o => o.Email == email);
+            // Busca odontólogo actual por email
+            string email = User.Identity.Name;
+            Odontologo odon = null;
+            foreach (Odontologo o in _context.Odontologo)
+            {
+                if (o.Email == email)
+                {
+                    odon = o;
+                    break;
+                }
+            }
             if (odon == null) return Forbid();
 
-            var pacientes = _context.Pacientes
-                                    .Where(p => p.OdontologoId == odon.Id)
-                                    .ToList();
+            // Filtra pacientes y planes del odontólogo actual
+            List<Paciente> pacientes = new List<Paciente>();
+            foreach (Paciente p in _context.Pacientes)
+            {
+                if (p.OdontologoId == odon.Id)
+                    pacientes.Add(p);
+            }
 
-            var misPlanes = _context.PlanTratamientos
-                .Where(pt => pacientes.Select(p => p.Id).Contains(pt.PacienteId))
-                .ToList()
-                .Select(pt => {
-                    pt.Paciente = pacientes.First(p => p.Id == pt.PacienteId);
-                    pt.Tratamiento = _context.Tratamientos.Find(pt.TratamientoId);
-                    return pt;
-                })
-                .ToList();
-
+            List<PlanTratamiento> misPlanes = new List<PlanTratamiento>();
+            foreach (PlanTratamiento pt in _context.PlanTratamientos)
+            {
+                foreach (Paciente paciente in pacientes)
+                {
+                    if (pt.PacienteId == paciente.Id)
+                    {
+                        pt.Paciente = paciente;
+                        pt.Tratamiento = _context.Tratamientos.Find(pt.TratamientoId);
+                        misPlanes.Add(pt);
+                        break;
+                    }
+                }
+            }
             return View(misPlanes);
         }
 
-        // GET: /PlanTratamiento/Details/5
+        // ========================================================
+        // DETALLE DE UN PLAN DE TRATAMIENTO
+        // ========================================================
         public IActionResult Details(int id)
         {
             var plan = _context.PlanTratamientos.Find(id);
             if (plan == null) return NotFound();
 
+            // Carga paciente, tratamiento y pasos asociados
             plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
             plan.Tratamiento = _context.Tratamientos.Find(plan.TratamientoId);
 
-            var pasos = _context.PasoTratamientos
-                                .Where(p => p.PlanTratamientoId == id)
-                                .ToList();
+            List<PasoTratamiento> pasos = new List<PasoTratamiento>();
+            foreach (PasoTratamiento p in _context.PasoTratamientos)
+            {
+                if (p.PlanTratamientoId == id)
+                    pasos.Add(p);
+            }
             ViewData["Pasos"] = pasos;
-            int hechos = pasos.Count(p => p.Estado.Equals("realizado", StringComparison.OrdinalIgnoreCase));
-            ViewData["Progreso"] = pasos.Count == 0 ? 0 : (hechos * 100) / pasos.Count;
+
+            // Calcula progreso según pasos realizados
+            int hechos = 0, total = pasos.Count;
+            foreach (PasoTratamiento p in pasos)
+            {
+                if (p.Estado != null && p.Estado.Equals("realizado", StringComparison.OrdinalIgnoreCase))
+                    hechos++;
+            }
+            ViewData["Progreso"] = total == 0 ? 0 : (hechos * 100) / total;
 
             return View(plan);
         }
 
-        // GET: /PlanTratamiento/UpdatePasoEstado
+        // ========================================================
+        // ACTUALIZAR ESTADO DE UN PASO (GET: solo redirige, POST: cambia estado)
+        // ========================================================
         [HttpGet("PlanTratamiento/UpdatePasoEstado")]
         public IActionResult UpdatePasoEstado()
         {
-            // Si alguien accede por GET, redirigimos al listado
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: /PlanTratamiento/UpdatePasoEstado
         [HttpPost]
         public IActionResult UpdatePasoEstado(int id, int planId, string nuevoEstado)
         {
-            // Buscar el paso correspondiente
+            // Busca el paso, lo actualiza y guarda
             PasoTratamiento paso = null;
             foreach (PasoTratamiento p in _context.PasoTratamientos)
             {
@@ -111,29 +147,23 @@ namespace DentAssist.Web.Controllers
                     break;
                 }
             }
-
             if (paso == null)
-            {
-                // No encontrado, puedes redirigir a Details o mostrar un error
                 return RedirectToAction("Details", new { id = planId });
-            }
 
-            // Actualizar el estado
             paso.Estado = nuevoEstado;
             _context.SaveChanges();
-
-            // Redirigir a los detalles del plan
             return RedirectToAction("Details", new { id = planId });
         }
 
-        // GET: /PlanTratamiento/Create
+        // ========================================================
+        // CREAR NUEVO PLAN DE TRATAMIENTO (GET y POST)
+        // ========================================================
         public IActionResult Create()
         {
             CargarDropdownsYPrecios();
             return View();
         }
 
-        // POST: /PlanTratamiento/Create
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Create(PlanTratamiento model)
         {
@@ -143,9 +173,9 @@ namespace DentAssist.Web.Controllers
                 CargarDropdownsYPrecios(model.PacienteId, model.TratamientoId);
                 return View(model);
             }
-
-            var tra = _context.Tratamientos.Find(model.TratamientoId);
-            model.Precio = tra?.Precio ?? 0m;
+            // Asigna precio y fecha según tratamiento seleccionado
+            Tratamiento tra = _context.Tratamientos.Find(model.TratamientoId);
+            model.Precio = tra != null ? tra.Precio : 0m;
             model.FechaCreacion = DateTime.Now;
 
             _context.PlanTratamientos.Add(model);
@@ -153,7 +183,9 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /PlanTratamiento/Edit/5
+        // ========================================================
+        // EDITAR PLAN DE TRATAMIENTO (GET y POST)
+        // ========================================================
         public IActionResult Edit(int id)
         {
             var plan = _context.PlanTratamientos.Find(id);
@@ -163,7 +195,6 @@ namespace DentAssist.Web.Controllers
             return View(plan);
         }
 
-        // POST: /PlanTratamiento/Edit/5
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, PlanTratamiento model)
         {
@@ -186,7 +217,9 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /PlanTratamiento/Delete/5
+        // ========================================================
+        // ELIMINAR PLAN DE TRATAMIENTO (GET y POST)
+        // ========================================================
         public IActionResult Delete(int id)
         {
             var plan = _context.PlanTratamientos.Find(id);
@@ -197,7 +230,6 @@ namespace DentAssist.Web.Controllers
             return View(plan);
         }
 
-        // POST: /PlanTratamiento/Delete/5
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
@@ -210,7 +242,9 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /PlanTratamiento/AddPaso/5
+        // ========================================================
+        // AGREGAR PASO A UN PLAN DE TRATAMIENTO (GET y POST)
+        // ========================================================
         public IActionResult AddPaso(int id)
         {
             ViewData["Estados"] = new[] { "pendiente", "realizado", "cancelado" };
@@ -221,16 +255,14 @@ namespace DentAssist.Web.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult AddPaso(PasoTratamiento model)
         {
-            // 1) Limpiamos cualquier estado previo
+            // Limpia y recarga dropdowns
             ModelState.Clear();
-
-            // 2) Recargamos los dropdowns
             ViewData["Estados"] = new[] { "pendiente", "realizado", "cancelado" };
             ViewData["Tratamientos"] = new SelectList(
                 _context.Tratamientos, "Id", "Nombre", model.TratamientoId
             );
 
-            // 3) Rellenamos Descripción y Precio desde el Tratamiento
+            // Rellena descripción y precio desde el tratamiento seleccionado
             var tra = _context.Tratamientos.Find(model.TratamientoId);
             if (tra != null)
             {
@@ -238,7 +270,7 @@ namespace DentAssist.Web.Controllers
                 model.Precio = tra.Precio;
             }
 
-            // 4) Intentamos guardar, y si chocamos contra PK duplicada, ajustamos Id
+            // Intenta guardar el nuevo paso (ajusta Id si hay conflicto por PK duplicada)
             _context.PasoTratamientos.Add(model);
             try
             {
@@ -249,36 +281,36 @@ namespace DentAssist.Web.Controllers
                 var inner = dbEx.InnerException?.Message;
                 if (inner != null && inner.Contains("Duplicate entry") && inner.Contains("for key 'PRIMARY'"))
                 {
-                    // calculamos el nuevo Id = max(Id) + 1
-                    int maxId = _context.PasoTratamientos.Any()
-                                ? _context.PasoTratamientos.Max(p => p.Id)
-                                : 0;
+                    int maxId = 0;
+                    foreach (PasoTratamiento p in _context.PasoTratamientos)
+                    {
+                        if (p.Id > maxId)
+                            maxId = p.Id;
+                    }
                     model.Id = maxId + 1;
-
-                    // volvemos a Attachear y guardar
                     _context.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Added;
                     _context.SaveChanges();
                 }
                 else
                 {
-                    // si es otro error, relanzamos
                     throw;
                 }
             }
-
             return RedirectToAction(nameof(Details), new { id = model.PlanTratamientoId });
         }
 
-
+        // ========================================================
+        // EXPORTAR PLAN A PDF
+        // ========================================================
         public async System.Threading.Tasks.Task<IActionResult> ExportPdf(int id)
         {
+            // Busca el plan y carga paciente, tratamiento y pasos
             PlanTratamiento plan = _context.PlanTratamientos.Find(id);
             if (plan == null) return NotFound();
 
             plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
             plan.Tratamiento = _context.Tratamientos.Find(plan.TratamientoId);
 
-            // Cargar los pasos
             List<PasoTratamiento> pasosUnicos = new List<PasoTratamiento>();
             foreach (PasoTratamiento p in _context.PasoTratamientos)
             {
@@ -294,14 +326,12 @@ namespace DentAssist.Web.Controllers
                         }
                     }
                     if (!existe)
-                    {
                         pasosUnicos.Add(p);
-                    }
                 }
             }
             plan.Pasos = pasosUnicos;
 
-            // Sumar los precios
+            // Suma total de precios de todos los pasos
             decimal sumaPrecios = 0m;
             foreach (PasoTratamiento paso in plan.Pasos)
             {
@@ -309,6 +339,7 @@ namespace DentAssist.Web.Controllers
             }
             ViewData["SumaPrecios"] = sumaPrecios;
 
+            // Renderiza la vista a HTML y la convierte a PDF
             string html = await _razorRenderer.RenderViewAsync("ExportPdf", plan);
 
             var doc = new HtmlToPdfDocument
@@ -320,24 +351,32 @@ namespace DentAssist.Web.Controllers
                     DocumentTitle = $"Plan_{plan.Id}"
                 },
                 Objects = {
-            new ObjectSettings
-            {
-                HtmlContent = html,
-                WebSettings = { DefaultEncoding = "utf-8" }
-            }
-        }
+                    new ObjectSettings
+                    {
+                        HtmlContent = html,
+                        WebSettings = { DefaultEncoding = "utf-8" }
+                    }
+                }
             };
 
             byte[] pdf = _pdfConverter.Convert(doc);
             return File(pdf, "application/pdf", $"Plan_{plan.Id}.pdf");
         }
 
-
+        // ========================================================
+        // MÉTODO DE APOYO: CARGA DROPDOWNS PARA FORMULARIOS
+        // ========================================================
         private void CargarDropdownsYPrecios(int? pacienteId = null, int? tratamientoId = null)
         {
             ViewData["Pacientes"] = new SelectList(_context.Pacientes, "Id", "NombreCompleto", pacienteId);
             ViewData["Tratamientos"] = new SelectList(_context.Tratamientos, "Id", "Nombre", tratamientoId);
-            var dict = _context.Tratamientos.ToDictionary(t => t.Id, t => t.Precio);
+
+            // Diccionario con precios de cada tratamiento
+            Dictionary<int, decimal> dict = new Dictionary<int, decimal>();
+            foreach (Tratamiento t in _context.Tratamientos)
+            {
+                dict[t.Id] = t.Precio;
+            }
             ViewData["PreciosTratamientos"] = dict;
         }
     }

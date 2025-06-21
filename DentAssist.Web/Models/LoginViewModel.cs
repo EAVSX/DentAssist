@@ -2,6 +2,7 @@
 
 namespace DentAssist.Web.Models
 {
+    // ViewModel para el formulario de inicio de sesión (login) de usuarios.
     public class LoginViewModel
     {
         [Required(ErrorMessage = "El email es obligatorio")]
@@ -14,10 +15,10 @@ namespace DentAssist.Web.Models
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
+        // Opción para recordar la sesión del usuario (login persistente)
         [Display(Name = "Recordarme")]
         public bool RememberMe { get; set; }
 
-        // Ahora es nullable para no ser obligatorio
         [Display(Name = "Return URL")]
         public string? ReturnUrl { get; set; }
     }

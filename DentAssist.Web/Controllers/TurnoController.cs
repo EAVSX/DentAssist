@@ -1,37 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DentAssist.Web.Datos;
 using DentAssist.Web.Models;
 
+// Controlador para la gestión de turnos (citas): agenda, creación, edición y eliminación
 namespace DentAssist.Web.Controllers
 {
     public class TurnoController : Controller
     {
+        // Contexto de base de datos para acceder a turnos, pacientes y odontólogos
         private readonly DentAssistContext _context;
 
+        // Inyección del contexto por constructor
         public TurnoController(DentAssistContext context)
         {
             _context = context;
         }
 
-        // GET: /Turno
+        // ========================================================
+        // LISTADO GENERAL DE TURNOS (para administración)
+        // ========================================================
         public IActionResult Index()
         {
+            // Carga todos los turnos, pacientes y odontólogos
             List<Turno> turnosDb = new List<Turno>();
-            foreach (Turno t in _context.Turnos.ToList())
+            foreach (Turno t in _context.Turnos)
                 turnosDb.Add(t);
 
             List<Paciente> pacientes = new List<Paciente>();
-            foreach (Paciente p in _context.Pacientes.ToList())
+            foreach (Paciente p in _context.Pacientes)
                 pacientes.Add(p);
 
             List<Odontologo> odontologos = new List<Odontologo>();
-            foreach (Odontologo o in _context.Odontologo.ToList())
+            foreach (Odontologo o in _context.Odontologo)
                 odontologos.Add(o);
 
+            // Arma la lista de turnos con datos enriquecidos (nombres de paciente y odontólogo)
             List<TurnoVista> lista = new List<TurnoVista>();
             foreach (Turno t in turnosDb)
             {
@@ -68,15 +74,18 @@ namespace DentAssist.Web.Controllers
             return View("Index", lista);
         }
 
-        // GET: /Turno/MiAgenda
+        // ========================================================
+        // REDIRECCIÓN A LA AGENDA DEL ODONTÓLOGO LOGUEADO
+        // ========================================================
         public IActionResult MiAgenda()
         {
+            // Busca el odontólogo actual por email de usuario
             string email = User.Identity?.Name;
             if (string.IsNullOrEmpty(email))
                 return RedirectToAction("Index");
 
             int odontologoId = 0;
-            foreach (Odontologo o in _context.Odontologo.ToList())
+            foreach (Odontologo o in _context.Odontologo)
             {
                 if (string.Equals(o.Email, email, StringComparison.OrdinalIgnoreCase))
                 {
@@ -91,9 +100,12 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Agenda", new { id = odontologoId });
         }
 
-        // GET: /Turno/Agenda/5
+        // ========================================================
+        // AGENDA SEMANAL DE UN ODONTÓLOGO (por id)
+        // ========================================================
         public IActionResult Agenda(int id)
         {
+            // Calcula el rango de la semana actual (lunes a domingo)
             DateTime hoy = DateTime.Today;
             int daysSinceMonday = ((int)hoy.DayOfWeek + 6) % 7;
             DateTime lunes = hoy.AddDays(-daysSinceMonday);
@@ -102,16 +114,18 @@ namespace DentAssist.Web.Controllers
             ViewData["Lunes"] = lunes;
             ViewData["Domingo"] = domingo;
 
+            // Carga todos los turnos y pacientes
             List<Turno> turnosDb = new List<Turno>();
-            foreach (Turno t in _context.Turnos.ToList())
+            foreach (Turno t in _context.Turnos)
                 turnosDb.Add(t);
 
             List<Paciente> pacientes = new List<Paciente>();
-            foreach (Paciente p in _context.Pacientes.ToList())
+            foreach (Paciente p in _context.Pacientes)
                 pacientes.Add(p);
 
+            // Obtiene el nombre del odontólogo
             string odontologoNombre = "";
-            foreach (Odontologo o in _context.Odontologo.ToList())
+            foreach (Odontologo o in _context.Odontologo)
             {
                 if (o.Id == id)
                 {
@@ -121,6 +135,7 @@ namespace DentAssist.Web.Controllers
             }
             ViewBag.OdontologoNombre = odontologoNombre;
 
+            // Arma lista de todos los turnos de este odontólogo
             List<TurnoVista> sinFiltro = new List<TurnoVista>();
             foreach (Turno t in turnosDb)
             {
@@ -143,13 +158,13 @@ namespace DentAssist.Web.Controllers
                             break;
                         }
                     }
-
                     tv.OdontologoNombre = odontologoNombre;
                     sinFiltro.Add(tv);
                 }
             }
             ViewData["TurnosSinFiltro"] = sinFiltro;
 
+            // Filtra solo los turnos de la semana actual
             List<TurnoVista> lista = new List<TurnoVista>();
             foreach (TurnoVista tv in sinFiltro)
             {
@@ -160,14 +175,15 @@ namespace DentAssist.Web.Controllers
             return View("Agenda", lista);
         }
 
-        // GET: /Turno/Create
+        // ========================================================
+        // CREAR NUEVO TURNO (GET y POST)
+        // ========================================================
         public IActionResult Create()
         {
             CargarDropdowns(null, null, null);
             return View(new Turno { FechaHora = DateTime.Now });
         }
 
-        // POST: /Turno/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Turno model)
@@ -177,7 +193,6 @@ namespace DentAssist.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                // PASA LOS SELECCIONADOS
                 CargarDropdowns(model.PacienteId, model.OdontologoId, model.Estado);
                 return View(model);
             }
@@ -187,7 +202,9 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: /Turno/Edit/5
+        // ========================================================
+        // EDITAR TURNO (GET y POST)
+        // ========================================================
         public IActionResult Edit(int id)
         {
             Turno turno = _context.Turnos.Find(id);
@@ -197,7 +214,6 @@ namespace DentAssist.Web.Controllers
             return View(turno);
         }
 
-        // POST: /Turno/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Turno model)
@@ -207,7 +223,6 @@ namespace DentAssist.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                // PASA LOS SELECCIONADOS
                 CargarDropdowns(model.PacienteId, model.OdontologoId, model.Estado);
                 return View(model);
             }
@@ -215,6 +230,7 @@ namespace DentAssist.Web.Controllers
             Turno t = _context.Turnos.Find(id);
             if (t == null) return NotFound();
 
+            // Actualiza todos los campos editables
             t.PacienteId = model.PacienteId;
             t.OdontologoId = model.OdontologoId;
             t.FechaHora = model.FechaHora;
@@ -226,7 +242,9 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // GET: /Turno/Delete/5
+        // ========================================================
+        // ELIMINAR TURNO (GET y POST)
+        // ========================================================
         public IActionResult Delete(int id)
         {
             Turno t = _context.Turnos.Find(id);
@@ -234,7 +252,6 @@ namespace DentAssist.Web.Controllers
             return View(t);
         }
 
-        // POST: /Turno/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -248,35 +265,46 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        // AJUSTADO: Cargar combos con valor seleccionado
+        // ========================================================
+        // MÉTODO DE APOYO: CARGAR COMBOS PARA LOS FORMULARIOS
+        // ========================================================
         private void CargarDropdowns(int? pacienteSeleccionado, int? odontologoSeleccionado, EstadoTurno? estadoSeleccionado)
         {
+            // Combo de pacientes
             var pacientes = new List<SelectListItem>();
-            foreach (Paciente p in _context.Pacientes.ToList())
+            foreach (Paciente p in _context.Pacientes)
+            {
                 pacientes.Add(new SelectListItem
                 {
                     Value = p.Id.ToString(),
                     Text = p.NombreCompleto,
                     Selected = (pacienteSeleccionado.HasValue && p.Id == pacienteSeleccionado.Value)
                 });
+            }
 
+            // Combo de odontólogos
             var odontologos = new List<SelectListItem>();
-            foreach (Odontologo o in _context.Odontologo.ToList())
+            foreach (Odontologo o in _context.Odontologo)
+            {
                 odontologos.Add(new SelectListItem
                 {
                     Value = o.Id.ToString(),
                     Text = o.NombreCompleto,
                     Selected = (odontologoSeleccionado.HasValue && o.Id == odontologoSeleccionado.Value)
                 });
+            }
 
+            // Combo de estados
             var estados = new List<SelectListItem>();
             foreach (EstadoTurno e in Enum.GetValues(typeof(EstadoTurno)))
+            {
                 estados.Add(new SelectListItem
                 {
                     Value = ((int)e).ToString(),
                     Text = e.ToString(),
                     Selected = (estadoSeleccionado.HasValue && e == estadoSeleccionado.Value)
                 });
+            }
 
             ViewBag.Pacientes = pacientes;
             ViewBag.Odontologos = odontologos;

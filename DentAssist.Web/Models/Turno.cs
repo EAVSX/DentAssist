@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DentAssist.Web.Models
 {
+    // Modelo que representa un turno o cita en la clínica dental.
+    // Incluye paciente, odontólogo, fecha, duración, estado y observaciones.
     public class Turno
     {
         [Key]
@@ -34,6 +36,7 @@ namespace DentAssist.Web.Models
         public EstadoTurno Estado { get; set; } = EstadoTurno.Programado; // Valor por defecto
     }
 
+    // Enum para los posibles estados de un turno
     public enum EstadoTurno
     {
         Programado = 0,

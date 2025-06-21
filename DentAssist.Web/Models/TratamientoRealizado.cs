@@ -5,9 +5,10 @@ using DentAssist.Models;
 
 namespace DentAssist.Web.Models
 {
-    /// <summary>
-    /// Registra un tratamiento ejecutado en el historial clínico de un paciente.
-    /// </summary>
+    /// Modelo que registra cada tratamiento realizado en el historial clínico de un paciente.
+    /// Incluye la fecha de realización, paciente, tratamiento aplicado y observaciones adicionales.
+    /// Se asocia por claves foráneas tanto al paciente como al tratamiento, permitiendo navegación clásica.
+    /// Facilita la trazabilidad y auditoría de procedimientos efectuados a cada paciente en la clínica.
     public class TratamientoRealizado
     {
         private int _id;
@@ -40,10 +41,9 @@ namespace DentAssist.Web.Models
             get { return _pacienteId; }
             set { _pacienteId = value; }
         }
-
-        /// <summary>
+        
         /// Paciente al que se le realizó el tratamiento.
-        /// </summary>
+     
         public Paciente Paciente
         {
             get { return _paciente; }
@@ -58,9 +58,8 @@ namespace DentAssist.Web.Models
             set { _tratamientoId = value; }
         }
 
-        /// <summary>
         /// Detalle del tratamiento aplicado.
-        /// </summary>
+     
         public Tratamiento Tratamiento
         {
             get { return _tratamiento; }

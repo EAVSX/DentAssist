@@ -5,36 +5,35 @@ using DentAssist.Models;
 
 namespace DentAssist.Web.Models
 {
+    // Modelo que representa cada uno de los pasos individuales dentro de un plan de tratamiento dental.
+    // Permite detallar el avance, estado y particularidades de cada etapa específica de un tratamiento.
+    // Relaciona cada paso con su plan padre y el tratamiento base correspondiente (mediante claves foráneas).
+    // Incluye campos para descripción, fecha estimada, estado, precio (heredado del tratamiento) y observaciones clínicas.
+    // Facilita el seguimiento granular del avance clínico y administrativo de cada paciente.
     public class PasoTratamiento
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        // FK al plan padre (lo mantienes, pero sin Required)
         public int PlanTratamientoId { get; set; }
 
         [ForeignKey(nameof(PlanTratamientoId))]
         public PlanTratamiento PlanTratamiento { get; set; }
 
-        // FK al Tratamiento (sin Required)
         public int TratamientoId { get; set; }
 
         [ForeignKey(nameof(TratamientoId))]
         public Tratamiento Tratamiento { get; set; }
 
-        // Descripción será asignada desde el Tratamiento.Nombre
         [StringLength(200)]
         public string Descripcion { get; set; }
 
-        // Fecha estimada (sin Required)
         public DateTime FechaEstimada { get; set; }
 
-        // Estado (sin Required)
         [StringLength(20)]
         public string Estado { get; set; }
 
-        // Precio que también llenas desde el Tratamiento.Precio
         public decimal Precio { get; set; }
 
         [StringLength(500)]

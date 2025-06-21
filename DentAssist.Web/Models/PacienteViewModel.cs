@@ -2,6 +2,10 @@
 
 namespace DentAssist.Web.Models
 {
+    // ViewModel simple para mostrar o editar datos básicos de un paciente en la interfaz.
+    // Incluye las propiedades esenciales: Id, nombre, apellido, fecha de nacimiento y teléfono.
+    // Útil para formularios, listados o vistas parciales donde no es necesario mostrar toda la información completa del modelo Paciente.
+    // Implementa propiedades de acceso clásico (get/set explícitos).
     public class PacienteViewModel
     {
         private int _id;

@@ -1,24 +1,25 @@
-﻿// Controllers/RecepcionistasController.cs
+﻿// Controlador para gestión de recepcionistas: CRUD, estadísticas y usuarios Identity
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using DentAssist.Web.Datos;
-using DentAssist.Web.Models;      // Para Turno y EstadoTurno
-using DentAssist.Models;          // Para Recepcionista
+using DentAssist.Web.Models; // Turno y EstadoTurno
+using DentAssist.Models;     // Recepcionista
 
 namespace DentAssist.Web.Controllers
 {
+    // Solo administradores pueden gestionar recepcionistas
     [Authorize(Roles = "Administrador")]
     public class RecepcionistasController : Controller
     {
+        // Dependencias: contexto de datos y servicios de usuarios y roles
         private readonly DentAssistContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
+        // Inyección de dependencias por constructor
         public RecepcionistasController(
             DentAssistContext context,
             UserManager<IdentityUser> userManager,
@@ -29,19 +30,25 @@ namespace DentAssist.Web.Controllers
             _roleManager = roleManager;
         }
 
-        // GET: /Recepcionistas
+        // ========================================================
+        // PANEL PRINCIPAL Y LISTADO DE RECEPCIONISTAS
+        // ========================================================
         public IActionResult Index()
         {
-            // ──────────────────────────────────────────────
-            // 1) Estadísticas para el panel (ViewBag)
-            // ──────────────────────────────────────────────
-            ViewBag.TotalPacientes = _context.Pacientes.Count();
-            ViewBag.TurnosProgramados = _context.Turnos.Count(t => t.Estado == EstadoTurno.Programado);
-            ViewBag.TurnosHoy = _context.Turnos.Count(t => t.FechaHora.Date == DateTime.Today);
+            // Estadísticas para el panel (dashboard)
+            ViewBag.TotalPacientes = 0;
+            foreach (var p in _context.Pacientes) ViewBag.TotalPacientes++;
 
-            // ──────────────────────────────────────────────
-            // 2) Listado de recepcionistas (sin cambios)
-            // ──────────────────────────────────────────────
+            int turnosProgramados = 0, turnosHoy = 0;
+            foreach (Turno t in _context.Turnos)
+            {
+                if (t.Estado == EstadoTurno.Programado) turnosProgramados++;
+                if (t.FechaHora.Date == DateTime.Today) turnosHoy++;
+            }
+            ViewBag.TurnosProgramados = turnosProgramados;
+            ViewBag.TurnosHoy = turnosHoy;
+
+            // Listado tradicional de recepcionistas
             List<Recepcionista> lista = new List<Recepcionista>();
             foreach (Recepcionista r in _context.Recepcionistas)
             {
@@ -51,26 +58,27 @@ namespace DentAssist.Web.Controllers
             return View(lista);
         }
 
-        // GET: /Recepcionistas/Create
+        // ========================================================
+        // CREAR NUEVO RECEPCIONISTA (GET y POST)
+        // ========================================================
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Recepcionistas/Create
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Recepcionista model)
+        public async System.Threading.Tasks.Task<IActionResult> Create(Recepcionista model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // 1) Guardar en tu tabla Recepcionista
+            // Guarda el recepcionista en la base relacional
             _context.Recepcionistas.Add(model);
             _context.SaveChanges();
 
-            // 2) Crear el usuario en Identity con la misma contraseña
+            // Crea el usuario en Identity
             IdentityUser user = new IdentityUser
             {
                 UserName = model.Email,
@@ -79,7 +87,7 @@ namespace DentAssist.Web.Controllers
             IdentityResult creation = await _userManager.CreateAsync(user, model.Password);
             if (!creation.Succeeded)
             {
-                // Si falla, rollback de la entidad
+                // Si falla Identity, elimina el recepcionista (rollback manual)
                 foreach (var err in creation.Errors)
                 {
                     ModelState.AddModelError("", err.Description);
@@ -89,20 +97,20 @@ namespace DentAssist.Web.Controllers
                 return View(model);
             }
 
-            // 3) Asegurar existencia del rol
+            // Asegura que exista el rol "Recepcionista" y lo asigna al usuario
             bool exists = await _roleManager.RoleExistsAsync("Recepcionista");
             if (!exists)
             {
                 await _roleManager.CreateAsync(new IdentityRole("Recepcionista"));
             }
-
-            // 4) Asignar rol
             await _userManager.AddToRoleAsync(user, "Recepcionista");
 
             return RedirectToAction("Index");
         }
 
-        // GET: /Recepcionistas/Delete/5
+        // ========================================================
+        // ELIMINAR RECEPCIONISTA (GET y POST)
+        // ========================================================
         public IActionResult Delete(int id)
         {
             Recepcionista r = _context.Recepcionistas.Find(id);
@@ -110,7 +118,6 @@ namespace DentAssist.Web.Controllers
             return View(r);
         }
 
-        // POST: /Recepcionistas/Delete/5
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

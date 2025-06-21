@@ -1,4 +1,5 @@
-﻿// Models/TurnoVista.cs
+﻿// Modelo de solo lectura para mostrar turnos en la interfaz.
+// Incluye datos listos para mostrar: paciente, odontólogo, fecha, duración, estado y observaciones.
 namespace DentAssist.Web.Models
 {
     public class TurnoVista

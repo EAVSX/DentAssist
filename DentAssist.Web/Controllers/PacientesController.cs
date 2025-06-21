@@ -7,16 +7,22 @@ using DentAssist.Web.Models;
 
 namespace DentAssist.Web.Controllers
 {
+    // Controlador encargado de CRUD para pacientes
     public class PacienteController : Controller
     {
+        // Contexto de base de datos para acceder a los pacientes y odontólogos
         private readonly DentAssistContext _context;
 
+        // Inyección del contexto por constructor
         public PacienteController(DentAssistContext context)
         {
             _context = context;
         }
 
-        // GET: /Paciente
+        // ========================================================
+        // LISTADO DE PACIENTES
+        // ========================================================
+        // Muestra todos los pacientes registrados
         public IActionResult Index()
         {
             var lista = new List<Paciente>();
@@ -25,20 +31,22 @@ namespace DentAssist.Web.Controllers
             return View(lista);
         }
 
-        // GET: /Paciente/Create
+        // ========================================================
+        // CREAR PACIENTE (GET y POST)
+        // ========================================================
+        // Formulario de creación de paciente, carga odontólogos para el dropdown
         public IActionResult Create()
         {
-            // cargamos dropdown de odontólogos (si quieres mantenerlo, o comenta la línea para quitarlo)
             ViewBag.Odontologos = new SelectList(_context.Odontologo, "Id", "NombreCompleto");
             return View();
         }
 
-        // POST: /Paciente/Create
+        // Procesa la creación de paciente
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Paciente model)
         {
-            // Quitamos toda validación de colecciones y navegación
+            // Remueve validaciones de navegación que no interesan en este formulario
             ModelState.Remove("Turnos");
             ModelState.Remove("Planes");
             ModelState.Remove("Odontologo");
@@ -55,7 +63,10 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Paciente/Edit/5
+        // ========================================================
+        // EDITAR PACIENTE (GET y POST)
+        // ========================================================
+        // Formulario de edición, carga los odontólogos actuales para el dropdown
         public IActionResult Edit(int id)
         {
             var paciente = _context.Pacientes.Find(id);
@@ -65,7 +76,7 @@ namespace DentAssist.Web.Controllers
             return View(paciente);
         }
 
-        // POST: /Paciente/Edit/5
+        // Procesa los cambios al editar un paciente
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Paciente model)
@@ -84,6 +95,7 @@ namespace DentAssist.Web.Controllers
             var paciente = _context.Pacientes.Find(id);
             if (paciente == null) return NotFound();
 
+            // Actualiza los campos principales
             paciente.Nombre = model.Nombre;
             paciente.Apellido = model.Apellido;
             paciente.Rut = model.Rut;
@@ -97,7 +109,10 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Paciente/Delete/5
+        // ========================================================
+        // ELIMINAR PACIENTE (GET y POST)
+        // ========================================================
+        // Muestra la confirmación antes de eliminar
         public IActionResult Delete(int id)
         {
             var paciente = _context.Pacientes.Find(id);
@@ -105,7 +120,7 @@ namespace DentAssist.Web.Controllers
             return View(paciente);
         }
 
-        // POST: /Paciente/Delete/5
+        // Confirma y ejecuta la eliminación
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)

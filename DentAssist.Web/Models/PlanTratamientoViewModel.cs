@@ -1,8 +1,11 @@
-﻿// Models/ViewModels/PlanTratamientoViewModel.cs
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DentAssist.Web.Models.ViewModels
 {
+    // ViewModel para el formulario de alta y edición de planes de tratamiento.
+    // Solo expone los campos requeridos al momento de crear un plan: paciente, tratamiento y observaciones.
+    // Incluye validaciones clásicas para asegurar que se seleccionen opciones válidas y que las observaciones sean obligatorias.
+    // Facilita la separación entre la lógica de la base de datos y lo que realmente se requiere en el formulario de la vista.
     public class PlanTratamientoViewModel
     {
         [Display(Name = "Paciente")]

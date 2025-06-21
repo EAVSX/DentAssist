@@ -2,6 +2,9 @@
 
 namespace DentAssist.Web.Models
 {
+    // ViewModel para el formulario de alta o edición de recepcionistas en la aplicación web.
+    // Incluye campos con validaciones clásicas para nombre, email y contraseña (con confirmación).
+    // Permite separar la lógica de presentación de la entidad principal, facilitando el uso en formularios y vistas.
     public class RecepcionistaViewModel
     {
         [Required, StringLength(50)]

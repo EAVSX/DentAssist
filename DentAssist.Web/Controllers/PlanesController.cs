@@ -8,19 +8,24 @@ using DentAssist.Web.Models;
 
 namespace DentAssist.Web.Controllers
 {
+    // Controlador para gestión de planes de tratamiento (solo por odontólogo autenticado)
     public class PlanesController : Controller
     {
+        // Contexto de base de datos
         private readonly DentAssistContext _context;
 
+        // Inyección de contexto
         public PlanesController(DentAssistContext context)
         {
             _context = context;
         }
 
-        // GET: /Planes/MisPlanes
+        // ===========================================================
+        // VER TODOS MIS PLANES (sólo los del odontólogo autenticado)
+        // ===========================================================
         public IActionResult MisPlanes()
         {
-            // 1. Obtener odontólogo actual por email
+            // Obtiene el ID del odontólogo actual usando su email de usuario
             string email = User.Identity?.Name;
             int odontoId = 0;
             foreach (Odontologo o in _context.Odontologo.ToList())
@@ -32,13 +37,14 @@ namespace DentAssist.Web.Controllers
                 }
             }
 
-            // 2. Cargar pacientes y filtrar por OdontologoId
+            // Obtiene todos los pacientes asociados a este odontólogo
             List<Paciente> pacientes = new List<Paciente>();
             foreach (Paciente p in _context.Pacientes.ToList())
             {
                 pacientes.Add(p);
             }
 
+            // Guarda solo los IDs de mis pacientes
             List<int> misPacientes = new List<int>();
             foreach (Paciente p in pacientes)
             {
@@ -46,14 +52,14 @@ namespace DentAssist.Web.Controllers
                     misPacientes.Add(p.Id);
             }
 
-            // 3. Cargar todos los planes
+            // Trae todos los planes de tratamiento
             List<PlanTratamiento> todosPlanes = new List<PlanTratamiento>();
             foreach (PlanTratamiento plan in _context.PlanTratamientos.ToList())
             {
                 todosPlanes.Add(plan);
             }
 
-            // 4. Filtrar solo los de mis pacientes
+            // Filtra solo los planes de los pacientes del odontólogo actual
             List<PlanTratamiento> lista = new List<PlanTratamiento>();
             foreach (PlanTratamiento plan in todosPlanes)
             {
@@ -67,23 +73,25 @@ namespace DentAssist.Web.Controllers
                 }
             }
 
+            // Muestra solo los planes que pertenecen al odontólogo logueado
             return View("MisPlanes", lista);
         }
 
-        // GET: /Planes/Create
+        // ===========================================================
+        // CREAR NUEVO PLAN DE TRATAMIENTO (GET y POST)
+        // ===========================================================
         public IActionResult Create()
         {
-            // Cargar dropdown de solo mis pacientes
+            // Carga solo los pacientes del odontólogo actual para el dropdown
             CargarPacientes();
             return View(new PlanTratamiento { FechaCreacion = DateTime.Now });
         }
 
-        // POST: /Planes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(PlanTratamiento model)
         {
-            // Ignorar navegación
+            // Ignora validación de navegación
             ModelState.Remove("Paciente");
             ModelState.Remove("Pasos");
 
@@ -93,22 +101,25 @@ namespace DentAssist.Web.Controllers
                 return View(model);
             }
 
+            // Asigna fecha y guarda el nuevo plan
             model.FechaCreacion = DateTime.Now;
             _context.PlanTratamientos.Add(model);
             _context.SaveChanges();
             return RedirectToAction("MisPlanes");
         }
 
-        // GET: /Planes/Details/5
+        // ===========================================================
+        // DETALLE DEL PLAN Y SU PROGRESO
+        // ===========================================================
         public IActionResult Details(int id)
         {
             PlanTratamiento plan = _context.PlanTratamientos.Find(id);
             if (plan == null) return NotFound();
 
-            // Cargar paciente
+            // Carga el paciente del plan
             plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
 
-            // Cargar pasos
+            // Carga los pasos asociados a ese plan
             List<PasoTratamiento> pasos = new List<PasoTratamiento>();
             foreach (PasoTratamiento p in _context.PasoTratamientos.ToList())
             {
@@ -117,7 +128,7 @@ namespace DentAssist.Web.Controllers
             }
             ViewData["Pasos"] = pasos;
 
-            // Calcular progreso
+            // Calcula el progreso del tratamiento
             int total = 0, hechos = 0;
             foreach (PasoTratamiento p in pasos)
             {
@@ -131,13 +142,15 @@ namespace DentAssist.Web.Controllers
             return View(plan);
         }
 
-        // GET: /Planes/AddPaso/5
+        // ===========================================================
+        // AGREGAR PASO AL PLAN (GET y POST)
+        // ===========================================================
         public IActionResult AddPaso(int id)
         {
+            // Devuelve el formulario con el id del plan
             return View(new PasoTratamiento { PlanTratamientoId = id });
         }
 
-        // POST: /Planes/AddPaso
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult AddPaso(PasoTratamiento model)
@@ -146,20 +159,22 @@ namespace DentAssist.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Agrega el paso nuevo y recarga el detalle del plan
             _context.PasoTratamientos.Add(model);
             _context.SaveChanges();
             return RedirectToAction("Details", new { id = model.PlanTratamientoId });
         }
 
-        // GET: /Planes/ExportPdf/5
+        
         public IActionResult ExportPdf(int id)
         {
-            // Aquí deberías generar el PDF (ej: Rotativa, SelectPdf, iTextSharp…)
-            // Por ahora devolvemos la vista Details para descarga manual:
+           
             return RedirectToAction("Details", new { id });
         }
 
-        // Helper: cargar dropdown de pacientes del odontólogo
+        // ===========================================================
+        // MÉTODO DE APOYO: CARGAR DROPDOWN DE PACIENTES DEL ODONTÓLOGO
+        // ===========================================================
         private void CargarPacientes()
         {
             string email = User.Identity?.Name;
@@ -173,6 +188,7 @@ namespace DentAssist.Web.Controllers
                 }
             }
 
+            // Carga solo los pacientes asociados al odontólogo actual
             List<SelectListItem> items = new List<SelectListItem>();
             foreach (Paciente p in _context.Pacientes.ToList())
             {
@@ -185,7 +201,6 @@ namespace DentAssist.Web.Controllers
                     });
                 }
             }
-
             ViewBag.Pacientes = items;
         }
     }

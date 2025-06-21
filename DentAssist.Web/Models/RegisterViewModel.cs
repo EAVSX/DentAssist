@@ -2,6 +2,9 @@
 
 namespace DentAssist.Web.Models
 {
+    // ViewModel para el formulario de registro de nuevos usuarios en la aplicación web.
+    // Contiene los campos básicos: email, contraseña y confirmación, todos validados clásicamente.
+    // Separa la lógica de la interfaz respecto al modelo principal de usuarios, asegurando validación y presentación adecuada.
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "El email es obligatorio")]

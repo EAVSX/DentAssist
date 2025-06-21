@@ -2,6 +2,9 @@
 
 namespace DentAssist.Web.Models
 {
+    // ViewModel usado para la creación y edición de odontólogos en formularios de la web.
+    // Incluye todos los campos necesarios para registrar un odontólogo y validaciones de formato.
+    // Se incluyen campos de contraseña y confirmación para gestionar el acceso de usuario asociado.
     public class OdontologoViewModel
     {
         [Required, StringLength(50)]

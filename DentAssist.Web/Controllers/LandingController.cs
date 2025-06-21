@@ -19,13 +19,13 @@ namespace DentAssist.Web.Controllers
 
                 if (User.IsInRole("Odontologo"))
                 {
-                    // Aquí suponemos que el odontólogo empieza en "MisPlanes"
+                    // Aquí suponemos que el odontólogo empieza en "en Panel de Odontologo"
                     return RedirectToAction("Index", "Home");
                 }
 
                 if (User.IsInRole("Administrador"))
                 {
-                    // Al admin le dejamos su vista de Pacientes por defecto
+                    // Al admin le dejamos su vista de Home por defecto
                     return RedirectToAction("Index", "Home");
                 }
             }

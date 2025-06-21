@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DentAssist.Web.Datos;
@@ -8,31 +7,44 @@ using DentAssist.Models;
 
 namespace DentAssist.Web.Controllers
 {
+    // Controlador para la gestión de tratamientos, accesible solo por Administrador o Recepcionista
     [Authorize(Roles = "Administrador,Recepcionista")]
     public class TratamientosController : Controller
     {
+        // Contexto de base de datos para acceder a los tratamientos
         private readonly DentAssistContext _context;
+
+        // Inyección de contexto por constructor
         public TratamientosController(DentAssistContext context)
         {
             _context = context;
         }
 
-        // GET: /Tratamientos
+        // ========================================================
+        // LISTADO DE TRATAMIENTOS
+        // ========================================================
         public IActionResult Index()
         {
-            // Cargo todos los tratamientos desde el DbContext
-            List<Tratamiento> lista = _context.Tratamientos.ToList();
+            // Carga todos los tratamientos desde la base de datos
+            List<Tratamiento> lista = new List<Tratamiento>();
+            foreach (Tratamiento t in _context.Tratamientos)
+            {
+                lista.Add(t);
+            }
             return View(lista);
         }
 
-        // GET: /Tratamientos/Create
+        // ========================================================
+        // CREAR NUEVO TRATAMIENTO (GET y POST)
+        // ========================================================
+        // Muestra el formulario de creación
         public IActionResult Create()
         {
             ViewData["Title"] = "Crear Tratamiento";
             return View(new Tratamiento());
         }
 
-        // POST: /Tratamientos/Create
+        // Procesa el alta del tratamiento
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Create(Tratamiento model)
         {
@@ -47,7 +59,10 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Tratamientos/Edit/5
+        // ========================================================
+        // EDITAR TRATAMIENTO (GET y POST)
+        // ========================================================
+        // Muestra el formulario de edición
         public IActionResult Edit(int id)
         {
             var tr = _context.Tratamientos.Find(id);
@@ -56,7 +71,7 @@ namespace DentAssist.Web.Controllers
             return View(tr);
         }
 
-        // POST: /Tratamientos/Edit/5
+        // Procesa la edición y guarda los cambios
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Tratamiento model)
         {
@@ -74,7 +89,10 @@ namespace DentAssist.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Tratamientos/Delete/5
+        // ========================================================
+        // ELIMINAR TRATAMIENTO (GET y POST)
+        // ========================================================
+        // Muestra confirmación de eliminación
         public IActionResult Delete(int id)
         {
             var tr = _context.Tratamientos.Find(id);
@@ -83,7 +101,7 @@ namespace DentAssist.Web.Controllers
             return View(tr);
         }
 
-        // POST: /Tratamientos/Delete/5
+        // Confirma y ejecuta la eliminación
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

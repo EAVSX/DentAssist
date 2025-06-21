@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DentAssist.Web.Models
 {
+    // Modelo que representa a los odontólogos registrados en el sistema.
+    // Incluye información básica de identificación, contacto, especialidad y rut (nacional).
     public class Odontologo
     {
         [Key]
@@ -37,7 +39,7 @@ namespace DentAssist.Web.Models
         [StringLength(100)]
         public string Especialidad { get; set; }
 
-        // Relaciones
+        // Relaciones: un odontólogo puede tener varios pacientes y varios turnos asignados
         public ICollection<Paciente> Pacientes { get; set; }
         public ICollection<Turno> Turnos { get; set; }
     }
