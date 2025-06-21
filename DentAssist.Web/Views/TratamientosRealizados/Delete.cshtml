@@ -1,0 +1,26 @@
+﻿@model DentAssist.Web.Models.TratamientoRealizado
+@{
+    ViewData["Title"] = "Eliminar Tratamiento";
+    Layout = "_Layout";
+}
+
+<h2>Eliminar Tratamiento</h2>
+
+<div class="alert alert-danger">
+    ¿Seguro que deseas eliminar este registro?
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Tratamiento:</strong> @Model.Tratamiento?.Nombre</p>
+        <p><strong>Fecha de realización:</strong> @Model.FechaRealizacion.ToString("dd/MM/yyyy")</p>
+        <p><strong>Observaciones:</strong> @Model.Observaciones</p>
+    </div>
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" asp-route-pacienteId="@Model.PacienteId" class="btn btn-secondary ms-2">Cancelar</a>
+</form>

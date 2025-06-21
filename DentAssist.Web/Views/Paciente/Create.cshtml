@@ -1,0 +1,97 @@
+﻿@model DentAssist.Web.Models.Paciente
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Crear Nuevo Paciente";
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0">
+                <i class="bi bi-person-plus me-2"></i>
+                @ViewData["Title"]
+            </h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="form-label"></label>
+                        <input asp-for="Nombre" class="form-control" required />
+                        <div class="invalid-feedback">El nombre es obligatorio.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Apellido" class="form-label"></label>
+                        <input asp-for="Apellido" class="form-control" required />
+                        <div class="invalid-feedback">El apellido es obligatorio.</div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Rut" class="form-label"></label>
+                        <input asp-for="Rut" class="form-control" required />
+                        <div class="invalid-feedback">El RUT es obligatorio.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="FechaNacimiento" class="form-label"></label>
+                        <input asp-for="FechaNacimiento" type="date" class="form-control" required />
+                        <div class="invalid-feedback">La fecha de nacimiento es obligatoria.</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Telefono" class="form-label"></label>
+                        <input asp-for="Telefono" class="form-control" />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" type="email" class="form-control" required />
+                        <div class="invalid-feedback">El email es obligatorio.</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Direccion" class="form-label"></label>
+                        <input asp-for="Direccion" class="form-control" />
+                    </div>
+
+                    @* Si quieres mantener dropdown de odontólogo, deja este bloque. Si no, bórralo.*@
+                    <div class="col-md-6">
+                        <label asp-for="OdontologoId" class="form-label">Odontólogo</label>
+                        <select asp-for="OdontologoId" class="form-select" asp-items="ViewBag.Odontologos">
+                            <option value="">-- Selecciona odontólogo --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-1"></i> Guardar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Validación Bootstrap 5
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.querySelectorAll('.needs-validation');
+                forms.forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

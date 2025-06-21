@@ -1,0 +1,125 @@
+﻿@model DentAssist.Web.Models.PlanTratamiento
+@{
+    ViewData["Title"] = "Detalle Plan #" + Model.Id;
+    var pasos = ViewData["Pasos"] as List<DentAssist.Web.Models.PasoTratamiento> ?? new List<DentAssist.Web.Models.PasoTratamiento>();
+    var progreso = ViewData["Progreso"] != null ? (int)ViewData["Progreso"] : 0;
+    var estados = new[] { "Pendiente", "Realizado", "Cancelado" };
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">
+        <i class="bi bi-file-earmark-medical"></i> Detalle Plan <span class="text-primary">#@Model.Id</span>
+    </h2>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <strong>Paciente:</strong> @Model.Paciente?.NombreCompleto
+                </div>
+                <div class="col-md-4">
+                    <strong>Tratamiento:</strong> @Model.Tratamiento?.Nombre
+                </div>
+                <div class="col-md-4">
+                    <strong>Creado:</strong> @Model.FechaCreacion.ToString("dd-MM-yyyy HH:mm")
+                </div>
+            </div>
+            <div>
+                <strong>Observaciones:</strong>
+                @Model.Observaciones
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label class="fw-bold">Progreso:</label>
+        <div class="progress" style="height: 28px;">
+            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                 role="progressbar"
+                 style="width: @progreso%; font-size:1rem">
+                @progreso %
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th class="text-center">#</th>
+                    <th>Descripción</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Obs. Clínicas</th>
+                    <th class="text-center">Actualizar Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (pasos.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No hay pasos registrados en este plan.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var paso in pasos)
+                    {
+                        <tr>
+                            <td class="text-center">@paso.Id</td>
+                            <td>@paso.Descripcion</td>
+                            <td>@paso.FechaEstimada.ToString("dd-MM-yyyy")</td>
+                            <td>
+                                <span class="badge
+                                    @(paso.Estado.ToLower() == "realizado" ? "bg-success" :
+                                      paso.Estado.ToLower() == "pendiente" ? "bg-warning text-dark" :
+                                      "bg-secondary")">
+                                    @paso.Estado
+                                </span>
+                            </td>
+                            <td>@paso.ObservacionesClinicas</td>
+                            <td>
+                                <form asp-action="UpdatePasoEstado" asp-controller="PlanTratamiento" method="post" class="d-flex gap-2">
+                                    <input type="hidden" name="id" value="@paso.Id" />
+                                    <input type="hidden" name="planId" value="@Model.Id" />
+                                    <select name="nuevoEstado" class="form-select form-select-sm">
+                                        @foreach (var est in estados)
+                                        {
+                                            if (est.Equals(paso.Estado, StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                <option value="@est" selected>@est</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@est">@est</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-success btn-sm" title="Actualizar">
+                                        <i class="bi bi-check2"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="AddPaso" asp-route-id="@Model.Id" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle"></i> Agregar Paso
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+        <a asp-action="ExportPdf" asp-route-id="@Model.Id" class="btn btn-outline-danger ms-auto">
+            <i class="bi bi-filetype-pdf"></i> Descargar PDF
+        </a>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}

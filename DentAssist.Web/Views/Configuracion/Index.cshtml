@@ -1,0 +1,105 @@
+﻿@model DentAssist.Models.Configuracion
+
+@{
+    ViewBag.Title = "Configuración General";
+}
+
+<style>
+    .config-container {
+        width: 420px;
+        margin: 50px auto 0 auto;
+        padding: 35px 35px 25px 35px;
+        border: 1px solid #e6e6e6;
+        border-radius: 14px;
+        background: #fafdff;
+        box-shadow: 0 2px 17px rgba(80,80,160,0.08);
+    }
+
+        .config-container label {
+            display: block;
+            font-weight: bold;
+            margin-top: 16px;
+            margin-bottom: 2px;
+            text-align: left;
+        }
+
+        .config-container input[type="text"],
+        .config-container input[type="email"] {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 3px;
+            border: 1px solid #b8bfc7;
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: #fff;
+        }
+
+        .config-container span.field-validation-error {
+            color: #b3261e;
+            font-size: 12px;
+            margin-bottom: 0;
+            display: block;
+        }
+
+    .btn-guardar {
+        margin-top: 22px;
+        padding: 10px 32px;
+        background-color: #198754;
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 2px 7px rgba(20,40,60,0.07);
+    }
+
+        .btn-guardar:hover {
+            background-color: #145e35;
+        }
+
+    .mensaje-exito {
+        margin-top: 12px;
+        color: #178e39;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 18px;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #23232b;
+    }
+</style>
+
+<h2>Configuración General</h2>
+
+<div class="config-container">
+    <form asp-action="Index" method="post">
+        <label>Nombre de la clínica:</label>
+        <input asp-for="NombreClinica" type="text" autocomplete="off" />
+        <span asp-validation-for="NombreClinica" class="field-validation-error"></span>
+
+        <label>Dirección:</label>
+        <input asp-for="Direccion" type="text" autocomplete="off" />
+        <span asp-validation-for="Direccion" class="field-validation-error"></span>
+
+        <label>Teléfono:</label>
+        <input asp-for="Telefono" type="text" autocomplete="off" />
+        <span asp-validation-for="Telefono" class="field-validation-error"></span>
+
+        <label>Email de contacto:</label>
+        <input asp-for="EmailContacto" type="email" autocomplete="off" />
+        <span asp-validation-for="EmailContacto" class="field-validation-error"></span>
+
+        <button class="btn-guardar" type="submit">Guardar</button>
+    </form>
+    @if (ViewBag.Mensaje != null)
+    {
+        <div class="mensaje-exito">@ViewBag.Mensaje</div>
+    }
+</div>

@@ -1,0 +1,72 @@
+﻿@model DentAssist.Models.Recepcionista
+
+@{
+    ViewBag.Title = "Eliminar Recepcionista";
+}
+
+<style>
+    .eliminar-form {
+        width: 380px;
+        margin: 40px auto;
+        padding: 24px 32px;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        background-color: #fff3f2;
+        box-shadow: 0 2px 8px rgba(30,40,90,0.07);
+    }
+
+        .eliminar-form dl {
+            margin: 0 0 16px 0;
+        }
+
+        .eliminar-form dt {
+            font-weight: bold;
+        }
+
+        .eliminar-form dd {
+            margin-bottom: 10px;
+            color: #222;
+        }
+
+    .btn-eliminar {
+        background-color: #d32f2f;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 15px;
+        padding: 8px 20px;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+        .btn-eliminar:hover {
+            background-color: #a30000;
+        }
+
+    .volver-link {
+        text-decoration: none;
+        color: #0366d6;
+    }
+
+        .volver-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<h2>Eliminar Recepcionista</h2>
+<div class="eliminar-form">
+    <p>¿Estás seguro de que deseas eliminar a este recepcionista?</p>
+
+    <dl>
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre</dd>
+        <dt>Email</dt>
+        <dd>@Model.Email</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button class="btn-eliminar" type="submit">Eliminar</button>
+        <a asp-action="Index" class="volver-link">Cancelar</a>
+    </form>
+</div>

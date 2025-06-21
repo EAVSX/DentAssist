@@ -1,68 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using DentAssist.Web.Datos;
 using DentAssist.Web.Models;
 
 namespace DentAssist.Web.Controllers
 {
-    public class PacientesController : Controller
+    public class PacienteController : Controller
     {
-        // GET: /Pacientes
-        public IActionResult Index()
+        private readonly DentAssistContext _context;
+
+        public PacienteController(DentAssistContext context)
         {
-            // Creamos lista de prueba
-            List<PacienteViewModel> listaPacientes = new List<PacienteViewModel>();
-
-            // Paciente 1
-            PacienteViewModel paciente1 = new PacienteViewModel();
-            paciente1.Id = 1;
-            paciente1.Nombre = "Juan";
-            paciente1.Apellido = "Pérez";
-            paciente1.FechaNacimiento = new DateTime(1985, 4, 10);
-            paciente1.Telefono = "912345678";
-            listaPacientes.Add(paciente1);
-
-            // Paciente 2
-            PacienteViewModel paciente2 = new PacienteViewModel();
-            paciente2.Id = 2;
-            paciente2.Nombre = "María";
-            paciente2.Apellido = "González";
-            paciente2.FechaNacimiento = new DateTime(1990, 9, 5);
-            paciente2.Telefono = "987654321";
-            listaPacientes.Add(paciente2);
-
-            // Devolvemos la vista con la lista
-            return View(listaPacientes);
+            _context = context;
         }
 
-        // GET: /Pacientes/Create
+        // GET: /Paciente
+        public IActionResult Index()
+        {
+            var lista = new List<Paciente>();
+            foreach (var p in _context.Pacientes)
+                lista.Add(p);
+            return View(lista);
+        }
+
+        // GET: /Paciente/Create
         public IActionResult Create()
         {
-            // Devuelve el formulario vacío
+            // cargamos dropdown de odontólogos (si quieres mantenerlo, o comenta la línea para quitarlo)
+            ViewBag.Odontologos = new SelectList(_context.Odontologo, "Id", "NombreCompleto");
             return View();
         }
 
-        // POST: /Pacientes/Create
+        // POST: /Paciente/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PacienteViewModel model)
+        public IActionResult Create(Paciente model)
         {
-            // Validación en servidor
+            // Quitamos toda validación de colecciones y navegación
+            ModelState.Remove("Turnos");
+            ModelState.Remove("Planes");
+            ModelState.Remove("Odontologo");
+            ModelState.Remove("OdontologoId");
+
             if (!ModelState.IsValid)
             {
+                ViewBag.Odontologos = new SelectList(_context.Odontologo, "Id", "NombreCompleto", model.OdontologoId);
                 return View(model);
             }
 
-            try
+            _context.Pacientes.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /Paciente/Edit/5
+        public IActionResult Edit(int id)
+        {
+            var paciente = _context.Pacientes.Find(id);
+            if (paciente == null) return NotFound();
+
+            ViewBag.Odontologos = new SelectList(_context.Odontologo, "Id", "NombreCompleto", paciente.OdontologoId);
+            return View(paciente);
+        }
+
+        // POST: /Paciente/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Paciente model)
+        {
+            ModelState.Remove("Turnos");
+            ModelState.Remove("Planes");
+            ModelState.Remove("Odontologo");
+            ModelState.Remove("OdontologoId");
+
+            if (!ModelState.IsValid)
             {
-                // TODO: Lógica para guardar en base de datos
-                return RedirectToAction("Index");
-            }
-            catch (Exception)
-            {
-                ModelState.AddModelError("", "Ocurrió un error al guardar el paciente.");
+                ViewBag.Odontologos = new SelectList(_context.Odontologo, "Id", "NombreCompleto", model.OdontologoId);
                 return View(model);
             }
+
+            var paciente = _context.Pacientes.Find(id);
+            if (paciente == null) return NotFound();
+
+            paciente.Nombre = model.Nombre;
+            paciente.Apellido = model.Apellido;
+            paciente.Rut = model.Rut;
+            paciente.FechaNacimiento = model.FechaNacimiento;
+            paciente.Telefono = model.Telefono;
+            paciente.Email = model.Email;
+            paciente.Direccion = model.Direccion;
+            paciente.OdontologoId = model.OdontologoId;
+
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /Paciente/Delete/5
+        public IActionResult Delete(int id)
+        {
+            var paciente = _context.Pacientes.Find(id);
+            if (paciente == null) return NotFound();
+            return View(paciente);
+        }
+
+        // POST: /Paciente/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            var paciente = _context.Pacientes.Find(id);
+            if (paciente != null)
+            {
+                _context.Pacientes.Remove(paciente);
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

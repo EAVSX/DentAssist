@@ -1,0 +1,25 @@
+﻿@model DentAssist.Web.Models.TratamientoRealizado
+@{
+    ViewData["Title"] = "Detalle del Tratamiento Realizado";
+    Layout = "_Layout";
+}
+
+<h2>Detalle</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Paciente ID:</strong> @Model.PacienteId</p>
+        <p><strong>Tratamiento:</strong> @Model.Tratamiento?.Nombre</p>
+        <p><strong>Fecha:</strong> @Model.FechaRealizacion.ToString("dd/MM/yyyy")</p>
+        <p><strong>Observaciones:</strong> @Model.Observaciones</p>
+    </div>
+</div>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+        <i class="bi bi-pencil-fill me-1"></i>Editar
+    </a>
+    <a asp-action="Index" asp-route-pacienteId="@Model.PacienteId" class="btn btn-secondary ms-2">
+        <i class="bi bi-list-ul me-1"></i>Volver al Historial
+    </a>
+</p>

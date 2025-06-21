@@ -1,0 +1,56 @@
+﻿@model DentAssist.Web.Models.Turno
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Detalle de Turno";
+}
+
+<style>
+    .detail-card {
+        max-width: 600px;
+        margin: 2rem auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+        .detail-card .card-header {
+            background: #198754;
+            color: #fff;
+            padding: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .detail-card dl {
+            padding: 1rem;
+        }
+
+        .detail-card dt {
+            font-weight: bold;
+        }
+
+        .detail-card dd {
+            margin-bottom: 8px;
+        }
+</style>
+
+<div class="card detail-card">
+    <div class="card-header"><i class="bi bi-info-circle me-2"></i>@ViewData["Title"]</div>
+    <dl>
+        <dt>ID</dt>
+        <dd>@Model.Id</dd>
+        <dt>Fecha / Hora</dt>
+        <dd>@Model.FechaHora.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dt>Duración</dt>
+        <dd>@Model.Duracion min</dd>
+        <dt>Paciente</dt>
+        <dd>@Model.Paciente.Nombre @Model.Paciente.Apellido</dd>
+        <dt>Odontólogo</dt>
+        <dd>@Model.Odontologo.Nombre @Model.Odontologo.Apellido</dd>
+        <dt>Estado</dt>
+        <dd>@Model.Estado</dd>
+        <dt>Observaciones</dt>
+        <dd>@Model.Observaciones</dd>
+    </dl>
+    <div class="p-3 text-end">
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</div>

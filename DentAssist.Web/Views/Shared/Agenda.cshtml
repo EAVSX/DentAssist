@@ -1,0 +1,62 @@
+﻿@model IEnumerable<DentAssist.Web.Models.Turno>
+@using DentAssist.Web.Models
+
+@{
+    ViewData["Title"] = "Agenda";
+    DateTime diaActual = DateTime.Today;
+    bool hayTurnos = false;
+}
+
+<h2>Agenda de Hoy (@diaActual.ToString("dd-MM-yyyy"))</h2>
+
+@if (Model == null)
+{
+    <p>No hay turnos disponibles.</p>
+}
+else
+{
+    foreach (Turno t in Model)
+    {
+        if (t.FechaHora.Date == diaActual)
+        {
+            hayTurnos = true;
+
+            string badgeClass = "bg-secondary";
+
+            if (t.Estado == EstadoTurno.Atendido)
+            {
+                badgeClass = "bg-success";
+            }
+            else if (t.Estado == EstadoTurno.Confirmado)
+            {
+                badgeClass = "bg-primary";
+            }
+            else if (t.Estado == EstadoTurno.Cancelado)
+            {
+                badgeClass = "bg-danger";
+            }
+            else if (t.Estado == EstadoTurno.Finalizado)
+            {
+                badgeClass = "bg-warning";
+            }
+            else if (t.Estado == EstadoTurno.Programado)
+            {
+                badgeClass = "bg-secondary";
+            }
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <span class="badge @badgeClass">@t.Estado.ToString()</span>
+                    <h5 class="card-title">Hora: @t.FechaHora.ToString("HH:mm")</h5>
+                    <p class="card-text">Paciente: @t.Paciente.NombreCompleto</p>
+                    <p class="card-text">Odontólogo: @t.Odontologo.NombreCompleto</p>
+                </div>
+            </div>
+        }
+    }
+
+    if (!hayTurnos)
+    {
+        <p>No hay turnos para hoy (@diaActual.ToShortDateString()).</p>
+    }
+}

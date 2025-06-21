@@ -1,0 +1,50 @@
+﻿@model DentAssist.Web.Models.PasoTratamiento
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Agregar Paso al Plan #" + Model.PlanTratamientoId;
+}
+
+<form asp-action="AddPaso" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- Muy importante: que exista este campo oculto -->
+    <input type="hidden" asp-for="PlanTratamientoId" />
+
+    <!-- Dropdown de Tratamientos -->
+    <div class="mb-3">
+        <label asp-for="TratamientoId" class="form-label">Tratamiento</label>
+        <select asp-for="TratamientoId"
+                class="form-select"
+                asp-items="@(ViewData["Tratamientos"] as SelectList)">
+            <option value="">-- Seleccione tratamiento --</option>
+        </select>
+    </div>
+
+    <!-- Fecha Estimada -->
+    <div class="mb-3">
+        <label asp-for="FechaEstimada" class="form-label">Fecha Estimada</label>
+        <input asp-for="FechaEstimada" type="date" class="form-control" />
+    </div>
+
+    <!-- Estado -->
+    <div class="mb-3">
+        <label asp-for="Estado" class="form-label">Estado</label>
+        <select asp-for="Estado"
+                class="form-select"
+                asp-items="@(new SelectList(ViewData["Estados"] as string[]))">
+        </select>
+    </div>
+
+    <!-- Observaciones clínicas -->
+    <div class="mb-3">
+        <label asp-for="ObservacionesClinicas" class="form-label">Obs. Clínicas</label>
+        <textarea asp-for="ObservacionesClinicas"
+                  class="form-control"
+                  rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Agregar Paso</button>
+    <a asp-action="Details" asp-route-id="@Model.PlanTratamientoId" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>

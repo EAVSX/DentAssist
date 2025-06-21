@@ -1,5 +1,10 @@
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\img\feature-history.svg
+wwwroot\img\feature-pdf.svg
+wwwroot\img\feature-schedule.svg
+wwwroot\img\hero-dental.svg
+wwwroot\img\logo-dentassist.svg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\css\bootstrap.css
 wwwroot\lib\bootstrap\css\bootstrap.css.map

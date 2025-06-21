@@ -1,0 +1,84 @@
+﻿@model List<DentAssist.Web.Models.TurnoVista>
+@{
+    ViewData["Title"] = "Mi Agenda de Turnos";
+    DateTime lunes = (DateTime)ViewData["Lunes"];
+    DateTime domingo = (DateTime)ViewData["Domingo"];
+    string nombreOdontologo = (ViewBag.OdontologoNombre != null) ? ViewBag.OdontologoNombre.ToString() : "";
+    string[] diasSemana = new string[7] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
+}
+
+<div class="container mt-5">
+    <h2>
+        <i class="bi bi-calendar2-week"></i> @ViewData["Title"]
+    </h2>
+
+    <div class="mb-3 text-muted">
+        Semana: @lunes.ToString("dd-MM-yyyy") — @domingo.ToString("dd-MM-yyyy")
+    </div>
+
+    @if (!string.IsNullOrEmpty(nombreOdontologo))
+    {
+        <div class="mb-4">
+            <span class="fw-bold">Odontólogo:</span> @nombreOdontologo
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        @for (int i = 0; i < 7; i++)
+        {
+            DateTime dia = lunes.AddDays(i);
+            List<DentAssist.Web.Models.TurnoVista> turnosDia = new List<DentAssist.Web.Models.TurnoVista>();
+            foreach (DentAssist.Web.Models.TurnoVista t in Model)
+            {
+                if (t.FechaHora.Date == dia.Date)
+                {
+                    turnosDia.Add(t);
+                }
+            }
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header text-center text-white" style="background-color: #1769ff;">
+                        <strong>@diasSemana[i] @dia.ToString("dd")</strong>
+                    </div>
+                    <div class="card-body">
+                        @if (turnosDia.Count > 0)
+                        {
+                            @foreach (var t in turnosDia)
+                            {
+                                <div class="mb-2 border-bottom pb-2">
+                                    <div>
+                                        <span class="fw-bold">@t.FechaHora.ToString("HH:mm")</span>
+                                    </div>
+                                    <div>
+                                        Paciente: @t.PacienteNombre
+                                    </div>
+                                    <div>
+                                        Estado: <span class="badge bg-secondary">@t.Estado</span>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(t.Observaciones))
+                                    {
+                                        <div>
+                                            <small class="text-muted">Obs: @t.Observaciones</small>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="text-muted text-center">Sin turnos</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left"></i> Volver al inicio
+        </a>
+    </div>
+</div>

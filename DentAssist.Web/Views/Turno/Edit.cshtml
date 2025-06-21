@@ -1,0 +1,59 @@
+﻿@model DentAssist.Web.Models.Turno
+@using DentAssist.Web.Models
+@using System
+
+@{
+    ViewBag.Title = "Editar Turno";
+}
+
+<h2 class="mb-4">Editar Turno</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="mb-3">
+        <label class="form-label">Paciente</label>
+        @Html.TextBoxFor(model => model.Paciente.NombreCompleto, new { @class = "form-control", @readonly = "readonly" })
+        @Html.HiddenFor(model => model.PacienteId)
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Odontólogo</label>
+        @Html.TextBoxFor(model => model.Odontologo.NombreCompleto, new { @class = "form-control", @readonly = "readonly" })
+        @Html.HiddenFor(model => model.OdontologoId)
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha y Hora</label>
+        @Html.TextBoxFor(model => model.FechaHora, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+        @Html.ValidationMessageFor(model => model.FechaHora, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Duración (minutos)</label>
+        @Html.TextBoxFor(model => model.Duracion, new { @class = "form-control", type = "number", min = "10", max = "240" })
+        @Html.ValidationMessageFor(model => model.Duracion, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Observaciones</label>
+        @Html.TextAreaFor(model => model.Observaciones, new { @class = "form-control", rows = "3" })
+        @Html.ValidationMessageFor(model => model.Observaciones, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Estado</label>
+        @Html.DropDownListFor(model => model.Estado, new SelectList(Enum.GetValues(typeof(DentAssist.Web.Models.EstadoTurno))), "-- Selecciona un estado --", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+}
+
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}

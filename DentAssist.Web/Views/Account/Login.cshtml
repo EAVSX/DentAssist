@@ -1,0 +1,107 @@
+﻿@model DentAssist.Web.Models.LoginViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Ingresar";
+}
+
+<style>
+    body.login-page {
+        background: #ffffff;
+    }
+
+    .login-card {
+        max-width: 420px;
+        width: 100%;
+        border-radius: 1rem;
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+        .login-card .card-header {
+            background-color: #1769ff;
+            color: #fff;
+            text-align: center;
+            padding: 1.25rem;
+        }
+
+            .login-card .card-header h4 {
+                margin: 0;
+                font-weight: 600;
+                font-size: 1.5rem;
+            }
+
+        .login-card .card-body {
+            padding: 2rem;
+        }
+
+    .input-group-text {
+        background: transparent;
+        border-right: none;
+    }
+
+    .form-control {
+        border-left: none;
+    }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #1769ff;
+        }
+
+    .btn-login {
+        background-color: #1769ff;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-weight: 600;
+    }
+
+        .btn-login:hover {
+            background-color: #0f58d0;
+        }
+</style>
+
+<body class="login-page">
+    <div class="d-flex align-items-center justify-content-center min-vh-100">
+        <div class="card login-card">
+            <div class="card-header">
+                <h4><i class="bi bi-shield-lock-fill me-2"></i>Bienvenido a DentAssist</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Login" method="post" novalidate>
+                    <div class="mb-4 input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope-fill"></i>
+                        </span>
+                        <input asp-for="Email" class="form-control ps-0" placeholder="tu@correo.com" />
+                    </div>
+                    <span asp-validation-for="Email" class="text-danger small d-block mb-2"></span>
+
+                    <div class="mb-4 input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-key-fill"></i>
+                        </span>
+                        <input asp-for="Password" type="password" class="form-control ps-0" placeholder="••••••••••" />
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger small d-block mb-2"></span>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" id="rememberMe" />
+                            <label class="form-check-label" for="rememberMe">Recordarme</label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-login btn-lg text-white">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>

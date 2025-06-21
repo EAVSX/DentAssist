@@ -1,0 +1,207 @@
+﻿@model DentAssist.Web.Models.PlanTratamiento
+@using DentAssist.Web.Models
+@{
+    Layout = null;
+    var pasos = Model.Pasos ?? new List<PasoTratamiento>();
+    int hechos = 0;
+    decimal sumaPrecios = 0m;
+    foreach (var p in pasos)
+    {
+        if (p.Estado != null && p.Estado.Equals("realizado", StringComparison.OrdinalIgnoreCase))
+        {
+            hechos++;
+        }
+        sumaPrecios += p.Precio;
+    }
+    int progreso = pasos.Count == 0 ? 0 : (hechos * 100) / pasos.Count;
+    Func<string, string> GetEstadoClass = estado =>
+    {
+        if (estado == null) return "badge bg-secondary";
+        string e = estado.ToLower();
+        if (e == "realizado") return "badge bg-success";
+        if (e == "cancelado") return "badge bg-danger";
+        return "badge bg-secondary";
+    };
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Plan #@Model.Id</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f8f9fa;
+            color: #222;
+            margin: 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 30px 0 10px 0;
+            color: #173c6b;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e5e5e5;
+            margin: 20px auto 10px auto;
+            box-shadow: 0 2px 8px rgba(80, 100, 120, 0.05);
+            max-width: 800px;
+        }
+
+        .card-body {
+            padding: 18px 32px 10px 32px;
+        }
+
+            .card-body label {
+                font-weight: bold;
+                color: #222;
+            }
+
+        .progress {
+            background: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0 18px 0;
+            height: 22px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg,#2068f5 0%,#4db7f7 100%);
+            height: 100%;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1em;
+            line-height: 22px;
+        }
+
+        table {
+            width: 96%;
+            margin: 12px auto 12px auto;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 9px 10px;
+            font-size: 1em;
+        }
+
+        th {
+            background: #eff4fa;
+            font-weight: bold;
+            color: #173c6b;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 7px;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .bg-success {
+            background: #198754;
+        }
+
+        .bg-danger {
+            background: #e74c3c;
+        }
+
+        .bg-secondary {
+            background: #6c757d;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            font-size: 1em;
+        }
+
+        .total-row th, .total-row td {
+            background: #e3f0ff;
+            font-size: 1.08em;
+            color: #173c6b;
+            border-top: 2px solid #173c6b;
+        }
+
+        .total-label {
+            text-align: right;
+            font-weight: bold;
+        }
+
+        .total-amount {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #173c6b;
+        }
+    </style>
+</head>
+<body>
+    <h2>Plan de Tratamiento #@Model.Id</h2>
+    <div class="card">
+        <div class="card-body">
+            <p><label>Paciente:</label> @Model.Paciente.NombreCompleto</p>
+            <p><label>Creado:</label> @Model.FechaCreacion.ToString("dd-MM-yyyy")</p>
+            <p><label>Observaciones:</label> @Model.Observaciones</p>
+            <p>
+                <label>Progreso:</label>
+                @progreso %
+                <div class="progress" style="max-width:400px;">
+                    <div class="progress-bar" style="width:@progreso%">@progreso %</div>
+                </div>
+            </p>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Fecha Estimada</th>
+                <th>Estado</th>
+                <th>Obs. Clínicas</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int contador = 1;
+                foreach (var paso in pasos)
+                {
+                    <tr>
+                        <td>@contador</td>
+                        <td>@paso.Descripcion</td>
+                        <td>@paso.FechaEstimada.ToString("dd-MM-yyyy")</td>
+                        <td>
+                            <span class="@GetEstadoClass(paso.Estado)">
+                                @(paso.Estado != null ? paso.Estado.ToUpper() : "SIN ESTADO")
+                            </span>
+                        </td>
+                        <td>@paso.ObservacionesClinicas</td>
+                        <td style="text-align:right;">@("$" + paso.Precio.ToString("N0"))</td>
+                    </tr>
+                    contador++;
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <th colspan="5" class="total-label">Total</th>
+                <td class="total-amount" style="text-align:right;">@("$" + sumaPrecios.ToString("N0"))</td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="footer">
+        DentAssist — Plan #@Model.Id
+    </div>
+</body>
+</html>

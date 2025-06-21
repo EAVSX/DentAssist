@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Panel de Recepcionista";
+
+    // Estos datos los puedes preparar en tu controlador:
+    int totalPacientes = ViewBag.TotalPacientes ?? 0;
+    int turnosPendientes = ViewBag.TurnosPendientes ?? 0;
+    int turnosHoy = ViewBag.TurnosHoy ?? 0;
+}
+
+<div class="container py-5">
+    <h1 class="display-4 text-center text-success mb-5">
+        <i class="bi bi-person-badge-fill me-2"></i>
+        Panel de Recepcionista
+    </h1>
+
+    <div class="row g-4 mb-5">
+        <!-- Gestionar Turnos -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-3">
+                        <h5 class="card-title">
+                            <i class="bi bi-calendar-event-fill text-primary me-2"></i>
+                            Gestionar Turnos
+                        </h5>
+                        <p class="card-text text-muted">
+                            Revisa, asigna y modifica los turnos de los pacientes.
+                        </p>
+                    </div>
+                    <a asp-controller="Turno" asp-action="Index"
+                       class="mt-auto btn btn-primary btn-lg w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i> Ir a Turnos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestionar Pacientes -->
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm border-success">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-3">
+                        <h5 class="card-title">
+                            <i class="bi bi-people-fill text-success me-2"></i>
+                            Gestionar Pacientes
+                        </h5>
+                        <p class="card-text text-muted">
+                            Añade, edita y consulta la información de tus pacientes.
+                        </p>
+                    </div>
+                    <a asp-controller="Paciente" asp-action="Index"
+                       class="mt-auto btn btn-success btn-lg w-100">
+                        <i class="bi bi-arrow-right-circle me-1"></i> Ir a Pacientes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Total Pacientes -->
+        <div class="col-md-4">
+            <div class="card text-white bg-success h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2">Total Pacientes</h6>
+                    <p class="display-5 fw-bold">@totalPacientes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Turnos Pendientes -->
+        <div class="col-md-4">
+            <div class="card text-white bg-warning h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2">Turnos Pendientes</h6>
+                    <p class="display-5 fw-bold">@turnosPendientes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Turnos de Hoy -->
+        <div class="col-md-4">
+            <div class="card text-white bg-info h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="card-subtitle mb-2">Turnos de Hoy</h6>
+                    <p class="display-5 fw-bold">@turnosHoy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

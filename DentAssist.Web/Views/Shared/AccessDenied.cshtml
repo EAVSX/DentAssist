@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Acceso Denegado";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0" style="max-width: 430px; width: 100%;">
+        <div class="card-body text-center">
+            <div class="mb-3">
+                <i class="bi bi-shield-lock-fill text-danger" style="font-size: 3.5rem;"></i>
+            </div>
+            <h2 class="fw-bold mb-2 text-danger">Acceso Denegado</h2>
+            <p class="mb-4 text-secondary" style="font-size: 1.13rem;">
+                Lo sentimos, no tienes permiso para ver esta sección.<br />
+                Si crees que es un error, por favor contacta al administrador.
+            </p>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-primary px-4 py-2 fw-bold">
+                <i class="bi bi-house-door me-1"></i> Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+<footer class="text-center text-muted mt-5">
+    <small>© @DateTime.Now.Year — DentAssist</small>
+</footer>

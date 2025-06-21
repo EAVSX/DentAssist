@@ -1,0 +1,66 @@
+﻿@model DentAssist.Web.Models.TratamientoRealizado
+@using Microsoft.AspNetCore.Mvc.Rendering
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Agregar Tratamiento Realizado";
+    Layout = "_Layout";
+    var pacienteId = (int)ViewData["PacienteId"];
+}
+
+<div class="d-flex align-items-center justify-content-center py-5">
+    <div class="card shadow-sm" style="max-width:480px; width:100%;">
+        <div class="card-header bg-success text-white text-center">
+            <h3 class="mb-0">
+                <i class="bi bi-journal-medical me-2"></i>
+                Agregar Tratamiento
+            </h3>
+        </div>
+        <div class="card-body bg-white">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="PacienteId" value="@pacienteId" />
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="TratamientoId" class="form-label">Tratamiento</label>
+                    <select asp-for="TratamientoId"
+                            asp-items="@(ViewData["TratamientosList"] as SelectList)"
+                            class="form-select">
+                        <option value="">-- Selecciona un tratamiento --</option>
+                    </select>
+                    <span asp-validation-for="TratamientoId" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="FechaRealizacion" class="form-label">Fecha de Realización</label>
+                    <input asp-for="FechaRealizacion" type="date" class="form-control" />
+                    <span asp-validation-for="FechaRealizacion" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Observaciones" class="form-label">Observaciones</label>
+                    <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Observaciones" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle-fill me-1"></i>Guardar
+                    </button>
+                    <a asp-action="Index"
+                       asp-route-pacienteId="@pacienteId"
+                       class="btn btn-outline-secondary btn-lg">
+                        <i class="bi bi-arrow-left-circle me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation-unobtrusive@3.2.14/dist/jquery.validate.unobtrusive.min.js"></script>
+}

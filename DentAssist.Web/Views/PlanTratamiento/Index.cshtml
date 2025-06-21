@@ -1,0 +1,44 @@
+﻿@model IEnumerable<DentAssist.Web.Models.PlanTratamiento>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Planes de Tratamiento";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between mb-4">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nuevo Plan
+        </a>
+    </div>
+    <table class="table table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Paciente</th>
+                <th>Tratamiento</th>
+                <th>Precio</th>
+                <th>Creado</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Id</td>
+                    <td>@p.Paciente.NombreCompleto</td>
+                    <td>@p.Tratamiento.Nombre</td>
+                    <td>@p.Precio.ToString("N0")</td>
+                    <td>@p.FechaCreacion:dd/MM/yyyy</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@p.Id" class="btn btn-sm btn-info me-1"><i class="bi bi-eye"></i></a>
+                        <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-warning me-1"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Delete" asp-route-id="@p.Id" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></a>
+                        <a asp-action="MisPlanes" class="btn btn-sm btn-secondary ms-2">MisPlanes</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,82 @@
+﻿@model DentAssist.Web.Models.Turno
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Nuevo Turno";
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-calendar-plus me-2"></i>@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Paciente</label>
+                        <select asp-for="PacienteId"
+                                asp-items="(IEnumerable<SelectListItem>)ViewBag.Pacientes"
+                                class="form-select">
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="PacienteId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Odontólogo</label>
+                        <select asp-for="OdontologoId"
+                                asp-items="(IEnumerable<SelectListItem>)ViewBag.Odontologos"
+                                class="form-select">
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="OdontologoId" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha y hora</label>
+                        <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="FechaHora" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Duración (min)</label>
+                        <input asp-for="Duracion" class="form-control" />
+                        <span asp-validation-for="Duracion" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Estado</label>
+                        <select asp-for="Estado"
+                                asp-items="(IEnumerable<SelectListItem>)ViewBag.Estados"
+                                class="form-select">
+                            <option value="">-- Seleccione --</option>
+                        </select>
+                        <span asp-validation-for="Estado" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Observaciones</label>
+                        <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save me-1"></i>Guardar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

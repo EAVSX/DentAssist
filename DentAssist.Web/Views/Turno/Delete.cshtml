@@ -1,0 +1,68 @@
+﻿@model DentAssist.Web.Models.Turno
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Eliminar Turno";
+}
+
+<style>
+    .eliminar-form {
+        max-width: 480px;
+        margin: 40px auto;
+        padding: 24px 32px;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        background: #fff3f2;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+        .eliminar-form dt {
+            font-weight: bold;
+        }
+
+        .eliminar-form dd {
+            margin-bottom: 10px;
+        }
+
+    .btn-eliminar {
+        background: #d32f2f;
+        color: #fff;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+    }
+
+        .btn-eliminar:hover {
+            background: #a30000;
+        }
+
+    .volver-link {
+        margin-left: 10px;
+        text-decoration: none;
+        color: #0366d6;
+    }
+</style>
+
+<h2>@ViewData["Title"]</h2>
+<div class="eliminar-form">
+    <p>¿Seguro que deseas eliminar este turno?</p>
+    <dl>
+        <dt>ID</dt>
+        <dd>@Model.Id</dd>
+        <dt>FechaHora</dt>
+        <dd>@Model.FechaHora.ToString("dd/MM/yyyy HH:mm")</dd>
+        <dt>Duración</dt>
+        <dd>@Model.Duracion min</dd>
+        <dt>Paciente</dt>
+        <dd>@Model.Paciente.Nombre @Model.Paciente.Apellido</dd>
+        <dt>Odontólogo</dt>
+        <dd>@Model.Odontologo.Nombre @Model.Odontologo.Apellido</dd>
+        <dt>Estado</dt>
+        <dd>@Model.Estado</dd>
+    </dl>
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <button class="btn-eliminar" type="submit">Eliminar</button>
+        <a asp-action="Index" class="volver-link">Cancelar</a>
+    </form>
+</div>

@@ -1,0 +1,24 @@
+﻿@model DentAssist.Web.Models.PlanTratamiento
+@{
+    ViewData["Title"] = "Eliminar Plan de Tratamiento";
+    Layout = "_Layout";
+}
+<div class="container mt-5">
+    <h2 class="mb-4 text-danger">@ViewData["Title"] — @Model.Id</h2>
+    <div class="alert alert-warning">
+        <strong>Atención:</strong> Esta acción es irreversible.
+    </div>
+    <dl class="row">
+        <dt class="col-sm-3">Paciente</dt>
+        <dd class="col-sm-9">@Model.Paciente.Nombre @Model.Paciente.Apellido</dd>
+        <dt class="col-sm-3">Fecha Creación</dt>
+        <dd class="col-sm-9">@Model.FechaCreacion.ToString("dd/MM/yyyy")</dd>
+        <dt class="col-sm-3">Observaciones</dt>
+        <dd class="col-sm-9">@Model.Observaciones</dd>
+    </dl>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Eliminar definitivamente</button>
+        <a class="btn btn-secondary ml-2" href="@Url.Action("Index")">Cancelar</a>
+    </form>
+</div>

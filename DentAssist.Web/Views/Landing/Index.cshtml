@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Bienvenido a DentAssist";
+    Layout = "_LayoutPublic";
+}
+
+<!-- Hero compacto -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold">DentAssist</h1>
+                <p class="lead mb-4">La plataforma de gestión clínica dental que simplifica tu día a día.</p>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg me-2">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-pencil-square me-1"></i>Regístrate
+                </a>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="/img/hero-dental.svg" alt="Gestión dental" class="img-fluid" style="max-height:300px;" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features en cards -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Características Destacadas</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="/img/feature-schedule.svg" class="card-img-top p-4" alt="Agenda Inteligente" style="height:150px; object-fit:contain" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Agenda Inteligente</h5>
+                        <p class="card-text">Organiza citas con facilidad y evita solapamientos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="/img/feature-history.svg" class="card-img-top p-4" alt="Historial Clínico" style="height:150px; object-fit:contain" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Historial Clínico</h5>
+                        <p class="card-text">Accede al historial de tratamientos de cada paciente en un clic.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <img src="/img/feature-pdf.svg" class="card-img-top p-4" alt="Exportar PDF" style="height:150px; object-fit:contain" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Exportar en PDF</h5>
+                        <p class="card-text">Genera planes de tratamiento profesionales para tus pacientes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonios o CTA breve -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h3 class="mb-3">¿Listo para mejorar tu clínica?</h3>
+        <p class="mb-4">Únete a más de 200 odontólogos que ya usan DentAssist.</p>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg">
+            <i class="bi bi-person-plus-fill me-1"></i>Regístrate Ahora
+        </a>
+    </div>
+</section>

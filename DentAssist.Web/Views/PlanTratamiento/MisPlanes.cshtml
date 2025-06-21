@@ -1,0 +1,69 @@
+﻿@model IEnumerable<DentAssist.Web.Models.PlanTratamiento>
+
+@{
+    ViewData["Title"] = "Mis Planes de Tratamiento";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0" style="font-weight:700;">
+            <i class="bi bi-list-check" style="color:#1769ff;"></i>
+            <span style="color:#222;">Mis Planes de <span style="color:#1769ff">Tratamiento</span></span>
+        </h2>
+        <a href="@Url.Action("Create", "PlanTratamiento")" class="btn btn-primary shadow-sm" style="background:#1769ff;border:none;">
+            <i class="bi bi-plus-circle"></i> Nuevo Plan
+        </a>
+    </div>
+    <div class="card shadow-sm" style="border-radius: 1rem;">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead style="background:#1769ff;color:#fff;">
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Paciente</th>
+                        <th>Tratamiento</th>
+                        <th class="text-end">Precio (CLP)</th>
+                        <th>Creado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-secondary">
+                                <i class="bi bi-info-circle" style="font-size:2rem;"></i><br />
+                                No tienes planes de tratamiento registrados.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var plan in Model)
+                        {
+                            <tr>
+                                <td class="text-center" style="font-weight:700;">@plan.Id</td>
+                                <td>@(plan.Paciente != null ? plan.Paciente.NombreCompleto : "-")</td>
+                                <td>@(plan.Tratamiento != null ? plan.Tratamiento.Nombre : "-")</td>
+                                <td class="text-end">@plan.Precio.ToString("N0")</td>
+                                <td>@plan.FechaCreacion.ToString("dd-MM-yyyy HH:mm")</td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Details", "PlanTratamiento", new { id = plan.Id })" class="btn btn-sm btn-info me-1" title="Ver Detalle" style="color:#fff;background:#1769ff;border:none;">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="@Url.Action("ExportPdf", "PlanTratamiento", new { id = plan.Id })" class="btn btn-sm btn-outline-danger" title="Descargar PDF" target="_blank" style="border:1px solid #fa5252;">
+                                        <i class="bi bi-filetype-pdf"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <a href="javascript:history.back()" class="btn btn-outline-secondary mt-4">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>

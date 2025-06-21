@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DentAssist.Web.Models.Turno>
+@using DentAssist.Web.Models
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Gestión de Turnos";
+}
+
+<style>
+    .btn-tabla {
+        padding: .25rem .6rem;
+        font-size: .80rem;
+    }
+
+    .estado {
+        font-size: .75rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background: #f5f7fb;
+    }
+
+    .vacio-row td {
+        text-align: center;
+        padding: 30px 0;
+        color: #8898aa;
+        font-style: italic;
+    }
+</style>
+
+<h2 class="mb-4"><i class="bi bi-clock me-1"></i>@ViewData["Title"]</h2>
+<div class="mb-3 d-flex justify-content-between">
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Nuevo Turno
+    </a>
+    <a asp-action="Agenda" class="btn btn-outline-secondary">
+        <i class="bi bi-calendar-week me-1"></i> Ver Agenda Semanal
+    </a>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Fecha / Hora</th>
+            <th>Duración</th>
+            <th>Paciente</th>
+            <th>Odontólogo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            bool tiene = false;
+        }
+        @foreach (Turno t in Model)
+        {
+            tiene = true;
+            string badge = "badge bg-secondary estado";
+
+            if (t.Estado == EstadoTurno.Atendido)
+            {
+                badge = "badge bg-success estado";
+            }
+            else if (t.Estado == EstadoTurno.Confirmado)
+            {
+                badge = "badge bg-primary estado";
+            }
+            else if (t.Estado == EstadoTurno.Cancelado)
+            {
+                badge = "badge bg-danger estado";
+            }
+            else if (t.Estado == EstadoTurno.Finalizado)
+            {
+                badge = "badge bg-warning estado";
+            }
+            else if (t.Estado == EstadoTurno.Programado)
+            {
+                badge = "badge bg-info estado";
+            }
+
+            <tr>
+                <td>@t.Id</td>
+                <td>@t.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@t.Duracion min</td>
+                <td>@t.Paciente.NombreCompleto</td>
+                <td>@t.Odontologo.NombreCompleto</td>
+                <td>
+                    <span class="@badge">
+                        @t.Estado.ToString()
+                    </span>
+                </td>
+                <td style="width:180px;">
+                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-info btn-tabla">Ver</a>
+                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-warning btn-tabla">Editar</a>
+                    <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-sm btn-danger btn-tabla">Eliminar</a>
+                </td>
+            </tr>
+        }
+        @if (!tiene)
+        {
+            <tr class="vacio-row">
+                <td colspan="7">No hay turnos registrados.</td>
+            </tr>
+        }
+    </tbody>
+</table>

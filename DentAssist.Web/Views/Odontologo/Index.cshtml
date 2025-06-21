@@ -1,0 +1,158 @@
+﻿@model List<DentAssist.Web.Models.Odontologo>
+
+@{
+    ViewData["Title"] = "Odontólogos";
+}
+
+<style>
+    .contenedor {
+        width: 90%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 36px;
+        margin-bottom: 28px;
+        font-size: 2.1rem;
+        color: #23232b;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .btn-principal {
+        display: inline-block;
+        margin-bottom: 28px;
+        padding: 11px 28px;
+        background-color: #1366f6;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 17px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(40,100,240,0.07);
+        transition: background .2s;
+    }
+
+        .btn-principal:hover {
+            background-color: #0549b5;
+        }
+
+    .tabla-odontologos {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 70%;
+        margin: 0 auto;
+        font-size: 16px;
+        background: #fff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 3px 22px rgba(0,0,0,0.06);
+    }
+
+        .tabla-odontologos th, .tabla-odontologos td {
+            padding: 15px 13px;
+            text-align: left;
+        }
+
+        .tabla-odontologos th {
+            background-color: #e6eefb;
+            color: #1a2334;
+            font-weight: bold;
+            border-bottom: 2px solid #d2dbee;
+            font-size: 17px;
+        }
+
+        .tabla-odontologos td {
+            border-bottom: 1px solid #e3e8f1;
+            color: #23233b;
+            background-color: #fbfcfd;
+        }
+
+        .tabla-odontologos tr:last-child td {
+            border-bottom: none;
+        }
+
+    .acciones a {
+        margin-right: 12px;
+        text-decoration: none;
+        color: #1976d2;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 6px;
+        background: #e3eefa;
+        border: 1px solid #c0d9ec;
+        transition: background .2s, color .2s;
+    }
+
+        .acciones a:hover {
+            background: #1976d2;
+            color: #fff;
+            border-color: #1976d2;
+        }
+
+        .acciones a:last-child {
+            color: #d32f2f;
+            background: #fbeaea;
+            border: 1px solid #edb1b1;
+        }
+
+            .acciones a:last-child:hover {
+                background: #d32f2f;
+                color: #fff;
+                border-color: #d32f2f;
+            }
+
+    .mensaje-vacio {
+        text-align: center;
+        color: #8d99ae;
+        font-size: 18px;
+        padding: 38px 0 36px 0;
+        background: #f8fafb;
+        border-radius: 0 0 13px 13px;
+        font-style: italic;
+    }
+</style>
+
+<div class="contenedor">
+    <h2>Odontólogos</h2>
+
+    <a class="btn-principal" asp-action="Create">+ Registrar Odontólogo</a>
+
+    <table class="tabla-odontologos">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>RUT</th>
+                <th>Especialidad</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var od in Model)
+                {
+                    <tr>
+                        <td>@(od.Nombre + " " + od.Apellido)</td>
+                        <td>@od.Rut</td>
+                        <td>@od.Especialidad</td>
+                        <td>@od.Email</td>
+                        <td class="acciones">
+                            <a asp-action="Edit" asp-route-id="@od.Id">Editar</a>
+                            <a asp-action="Delete" asp-route-id="@od.Id">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="mensaje-vacio">No hay odontólogos registrados.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

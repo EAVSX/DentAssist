@@ -1,57 +1,253 @@
 is_global = true
 build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = DentAssist.Web
 build_property.RootNamespace = DentAssist.Web
-build_property.ProjectDir = C:\Users\eavsx\source\repos\DentAssist.Web\DentAssist.Sln\DentAssist.Web\
+build_property.ProjectDir = C:\Users\eavsx\source\repos\DentAssist\DentAssist.Web\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\eavsx\source\repos\DentAssist.Web\DentAssist.Sln\DentAssist.Web
+build_property.MSBuildProjectDirectory = C:\Users\eavsx\source\repos\DentAssist\DentAssist.Web
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Home/Index.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/AdminUsers/EditRoles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2Vyc1xFZGl0Um9sZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/AdminUsers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5Vc2Vyc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Configuracion/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29uZmlndXJhY2lvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Home/Privacy.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Home/OdontologoPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxPZG9udG9sb2dvUGFuZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Pacientes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVzXENyZWF0ZS5jc2h0bWw=
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Home/RecepcionistaPanel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWNlcGNpb25pc3RhUGFuZWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Pacientes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVzXEluZGV4LmNzaHRtbA==
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Landing/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGFuZGluZ1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Shared/Error.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Odontologo/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2RvbnRvbG9nb1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Odontologo/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2RvbnRvbG9nb1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Odontologo/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2RvbnRvbG9nb1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Odontologo/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT2RvbnRvbG9nb1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Paciente/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Paciente/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Paciente/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Paciente/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Paciente/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFjaWVudGVcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/AddPaso.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXEFkZFBhc28uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/ExportPdf.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXEV4cG9ydFBkZi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/PlanTratamiento/MisPlanes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxhblRyYXRhbWllbnRvXE1pc1BsYW5lcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Recepcionistas/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjZXBjaW9uaXN0YXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Recepcionistas/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjZXBjaW9uaXN0YXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Recepcionistas/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjZXBjaW9uaXN0YXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Recepcionistas/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVjZXBjaW9uaXN0YXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEFjY2Vzc0RlbmllZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/Agenda.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEFnZW5kYS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/_LayoutPublic.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRQdWJsaWMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/_ViewImports.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/TratamientosRealizados/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zUmVhbGl6YWRvc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/TratamientosRealizados/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zUmVhbGl6YWRvc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/TratamientosRealizados/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zUmVhbGl6YWRvc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/TratamientosRealizados/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zUmVhbGl6YWRvc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/TratamientosRealizados/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zUmVhbGl6YWRvc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Tratamientos/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Tratamientos/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Tratamientos/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Tratamientos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhdGFtaWVudG9zXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Agenda.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cQWdlbmRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Turno/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHVybm9cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/_ViewStart.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/eavsx/source/repos/DentAssist.Web/DentAssist.Sln/DentAssist.Web/Views/Shared/_Layout.cshtml]
+[C:/Users/eavsx/source/repos/DentAssist/DentAssist.Web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-c9of1nhywl

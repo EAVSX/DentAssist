@@ -1,0 +1,84 @@
+﻿@model DentAssist.Web.Models.ViewModels.PlanTratamientoViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Nuevo Plan de Tratamiento";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-journal-plus me-2"></i>@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row mb-3">
+                    <label asp-for="PacienteId" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="PacienteId"
+                                class="form-select"
+                                asp-items="@(ViewData["Pacientes"] as SelectList)">
+                            <option value="">-- Seleccione paciente --</option>
+                        </select>
+                        <span asp-validation-for="PacienteId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label asp-for="TratamientoId" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="TratamientoId"
+                                class="form-select"
+                                asp-items="@(ViewData["Tratamientos"] as SelectList)">
+                            <option value="">-- Seleccione tratamiento --</option>
+                        </select>
+                        <span asp-validation-for="TratamientoId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label asp-for="Observaciones" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <textarea asp-for="Observaciones"
+                                  class="form-control"
+                                  rows="4"></textarea>
+                        <span asp-validation-for="Observaciones" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-1"></i>Guardar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+                        <i class="bi bi-x me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+          'use strict';
+          window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.forEach.call(forms, function (form) {
+              form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }
+                form.classList.add('was-validated');
+              }, false);
+            });
+          }, false);
+        })();
+    </script>
+}

@@ -1,8 +1,165 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewBag.Title = "Panel de Administración";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .contenedor-admin {
+        width: 92%;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    h2 {
+        margin-top: 48px;
+        margin-bottom: 14px;
+        font-size: 2.4rem;
+        color: #20253a;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+
+    .descripcion {
+        font-size: 1.09rem;
+        color: #636879;
+        margin-bottom: 38px;
+    }
+
+    .paneles-admin {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 38px;
+        margin-top: 40px;
+        margin-bottom: 32px;
+    }
+
+    .panel-admin {
+        width: 280px;
+        background: #fff;
+        border: 1.5px solid #e1e8f0;
+        border-radius: 18px;
+        box-shadow: 0 2px 17px rgba(50,80,150,0.05);
+        padding: 32px 24px 26px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow .18s;
+    }
+
+        .panel-admin:hover {
+            box-shadow: 0 6px 22px rgba(50,80,150,0.11);
+            border-color: #2061d6;
+        }
+
+    .icono-panel {
+        margin-bottom: 18px;
+        font-size: 48px;
+        color: #1565c0;
+    }
+
+    .titulo-panel {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1a2334;
+        margin-bottom: 10px;
+    }
+
+    .panel-link {
+        margin-top: 14px;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 7px;
+        background: #1565c0;
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background .18s;
+        box-shadow: 0 2px 10px rgba(21,101,192,0.05);
+    }
+
+        .panel-link:hover {
+            background: #174ea6;
+        }
+
+    .panel-link-gris {
+        background: #374151;
+    }
+
+        .panel-link-gris:hover {
+            background: #23272e;
+        }
+
+    /* Media Query para responsive */
+    media (max-width: 900px) {
+        .paneles-admin
+
+    {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .panel-admin {
+        width: 95%;
+        margin-bottom: 20px;
+    }
+
+    }
+</style>
+
+<div class="contenedor-admin">
+    <h2>Panel del Administrador</h2>
+    <div class="descripcion">
+        Desde aquí puedes gestionar <b>odontólogos</b>, <b>recepcionistas</b> y <b>tratamientos</b> de tu clínica.<br />
+        Accede a la configuración general si lo requieres.
+    </div>
+
+    <div class="paneles-admin">
+        <!-- Panel Odontólogos -->
+        <div class="panel-admin">
+            <div class="icono-panel">
+                <!-- Icono usuario (SVG) -->
+                <svg height="38" width="38" viewBox="0 0 24 24" fill="#1565c0">
+                    <path d="M12 12c2.67 0 8 1.34 8 4v2H4v-2c0-2.66 5.33-4 8-4zm0-2a4 4 0 100-8 4 4 0 000 8z"></path>
+                </svg>
+            </div>
+            <div class="titulo-panel">Gestionar Odontólogos</div>
+            <a href="/Odontologo" class="panel-link">Ir a Odontólogos</a>
+        </div>
+        <!-- Panel Recepcionistas -->
+        <div class="panel-admin">
+            <div class="icono-panel">
+                <!-- Icono persona (SVG) -->
+                <svg height="38" width="38" viewBox="0 0 24 24" fill="#28a745">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20v-2c0-2.21 3.58-4 8-4s8 1.79 8 4v2z" />
+                </svg>
+            </div>
+            <div class="titulo-panel">Gestionar Recepcionistas</div>
+            <a href="@Url.Action("Create", "Recepcionistas")" class="panel-link" style="background:#28a745;">Ir a Recepcionistas</a>
+        </div>
+        <!-- Panel Tratamientos -->
+        <div class="panel-admin">
+            <div class="icono-panel">
+                <!-- Icono tratamientos (SVG simple) -->
+                <svg height="38" width="38" viewBox="0 0 24 24" fill="#f57c00">
+                    <rect x="5" y="11" width="14" height="7" rx="2"></rect>
+                    <rect x="7" y="5" width="10" height="4" rx="1.5"></rect>
+                </svg>
+            </div>
+            <div class="titulo-panel">Gestionar Tratamientos</div>
+            <a href="/Tratamientos" class="panel-link" style="background:#f57c00;">Ir a Tratamientos</a>
+        </div>
+        <!-- Panel Configuración (opcional) -->
+        <div class="panel-admin">
+            <div class="icono-panel">
+                <!-- Icono engranaje -->
+                <svg height="38" width="38" viewBox="0 0 24 24" fill="#374151">
+                    <path d="M19.14,12.94a7.15,7.15,0,0,0,.05-1,7.15,7.15,0,0,0-.05-1l2.11-1.65a.5.5,0,0,0,.12-.65l-2-3.46a.5.5,0,0,0-.61-.22l-2.49,1a7,7,0,0,0-1.7-1l-.38-2.65A.5.5,0,0,0,14,2H10a.5.5,0,0,0-.5.42l-.38,2.65a7,7,0,0,0-1.7,1l-2.49-1a.5.5,0,0,0-.61.22l-2,3.46a.5.5,0,0,0,.12.65l2.11,1.65a7.15,7.15,0,0,0-.05,1,7.15,7.15,0,0,0,.05,1L2.86,14.59a.5.5,0,0,0-.12.65l2,3.46a.5.5,0,0,0,.61.22l2.49-1a7,7,0,0,0,1.7,1l.38,2.65A.5.5,0,0,0,10,22h4a.5.5,0,0,0,.5-.42l.38-2.65a7,7,0,0,0,1.7-1l2.49,1a.5.5,0,0,0,.61-.22l2-3.46a.5.5,0,0,0-.12-.65ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+                </svg>
+            </div>
+            <div class="titulo-panel">Configuración General</div>
+            <a href="/Configuracion" class="panel-link panel-link-gris">Ir a Configuración</a>
+        </div>
+    </div>
 </div>
