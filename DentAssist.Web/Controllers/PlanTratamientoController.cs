@@ -38,53 +38,97 @@ namespace DentAssist.Web.Controllers
         // ========================================================
         public IActionResult Index()
         {
-            // Carga todos los planes, junto a paciente y tratamiento asociados (uno a uno, clásico)
-            var planes = new List<PlanTratamiento>();
-            foreach (PlanTratamiento plan in _context.PlanTratamientos)
+            // 1) Copia planes a memoria (una sola consulta, conexión se libera)
+            List<PlanTratamiento> planes = new List<PlanTratamiento>();
+            foreach (PlanTratamiento p in _context.PlanTratamientos)
             {
-                plan.Paciente = _context.Pacientes.Find(plan.PacienteId);
-                plan.Tratamiento = _context.Tratamientos.Find(plan.TratamientoId);
-                planes.Add(plan);
+                planes.Add(p);
             }
+
+            // 2) Copia pacientes a memoria
+            List<Paciente> pacientes = new List<Paciente>();
+            foreach (Paciente pac in _context.Pacientes)
+            {
+                pacientes.Add(pac);
+            }
+
+            // 3) Copia tratamientos a memoria
+            List<Tratamiento> tratamientos = new List<Tratamiento>();
+            foreach (Tratamiento tra in _context.Tratamientos)
+            {
+                tratamientos.Add(tra);
+            }
+
+            // 4) Relaciona cada plan con su paciente y tratamiento correspondientes
+            foreach (PlanTratamiento plan in planes)
+            {
+                // Asigna paciente
+                foreach (Paciente pac in pacientes)
+                {
+                    if (pac.Id == plan.PacienteId)
+                    {
+                        plan.Paciente = pac;
+                        break;
+                    }
+                }
+
+                // Asigna tratamiento
+                foreach (Tratamiento tra in tratamientos)
+                {
+                    if (tra.Id == plan.TratamientoId)
+                    {
+                        plan.Tratamiento = tra;
+                        break;
+                    }
+                }
+            }
+
             return View(planes);
         }
 
         // ========================================================
-        // LISTADO DE PLANES SOLO DEL ODONTÓLOGO AUTENTICADO
+        // LISTADO SOLO DEL ODONTÓLOGO AUTENTICADO
         // ========================================================
         [Authorize(Roles = "Odontologo")]
         public IActionResult MisPlanes()
         {
-            // Busca odontólogo actual por email
-            string email = User.Identity.Name;
+            // ――― 1) Obtiene el odontólogo actual
+            string email = User.Identity?.Name;
             Odontologo odon = null;
             foreach (Odontologo o in _context.Odontologo)
             {
-                if (o.Email == email)
-                {
-                    odon = o;
-                    break;
-                }
+                if (o.Email == email) { odon = o; break; }
             }
             if (odon == null) return Forbid();
 
-            // Filtra pacientes y planes del odontólogo actual
-            List<Paciente> pacientes = new List<Paciente>();
+            // ――― 2) Materializa listas para evitar la excepción de conexión en uso
+            var planesDb = new List<PlanTratamiento>();
+            foreach (PlanTratamiento p in _context.PlanTratamientos) planesDb.Add(p);
+
+            var pacientes = new List<Paciente>();
             foreach (Paciente p in _context.Pacientes)
             {
-                if (p.OdontologoId == odon.Id)
-                    pacientes.Add(p);
+                if (p.OdontologoId == odon.Id) pacientes.Add(p);
             }
 
-            List<PlanTratamiento> misPlanes = new List<PlanTratamiento>();
-            foreach (PlanTratamiento pt in _context.PlanTratamientos)
+            var tratamientos = new Dictionary<int, Tratamiento>();
+            foreach (Tratamiento t in _context.Tratamientos)
+            {
+                tratamientos[t.Id] = t;
+            }
+
+            // ――― 3) Construye la lista final
+            var misPlanes = new List<PlanTratamiento>();
+            foreach (PlanTratamiento pt in planesDb)
             {
                 foreach (Paciente paciente in pacientes)
                 {
                     if (pt.PacienteId == paciente.Id)
                     {
                         pt.Paciente = paciente;
-                        pt.Tratamiento = _context.Tratamientos.Find(pt.TratamientoId);
+                        pt.Tratamiento = tratamientos.ContainsKey(pt.TratamientoId)
+                                         ? tratamientos[pt.TratamientoId]
+                                         : null;
                         misPlanes.Add(pt);
                         break;
                     }
